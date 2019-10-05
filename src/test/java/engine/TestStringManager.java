@@ -2,6 +2,8 @@ package engine;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,19 +52,49 @@ public class TestStringManager {
 		manager.updateGuessedWord('$');
 	}
 	
-/*	@Test
+	@Test
 	public void testUpdateGuessedWordWhenCharNotAppears() {
-		manager.setGuessingWord(new char[] {'_','_','_','_'});
+		initializeEmptyGuessingWord(4);
 		manager.updateGuessedWord('a');
 		assertArrayEquals(new char[] {'_','_','_','_'}, manager.getGuessingWord());
 	}
 
+	private void initializeEmptyGuessingWord(int size) {
+		char[] emptyGuessedWord = new char[size];
+		Arrays.fill(emptyGuessedWord, StringManager.EMPTY_CHAR);
+		manager.setGuessingWord(emptyGuessedWord);
+	}
+
 	@Test
-	public void testUpdateGuessedWordWhenACharAppears() {
-		manager.setGuessingWord(new char[] {'_','_','_','_'});
+	public void testUpdateGuessedWordWhenExactlyOneCharAppears() {
+		initializeEmptyGuessingWord(4);
 		manager.updateGuessedWord('e');
 		assertArrayEquals(new char[] {'_','e','_','_'}, manager.getGuessingWord());
-	}*/
+		
+		manager = new StringManager("toast");
+		manager.updateGuessedWord('o');
+		assertArrayEquals(new char[] {'_','o','_','_','_'}, manager.getGuessingWord());
+	}
 
-
+	@Test 
+	public void testUpdateGuessedWordWhenExactlyOneCharAppearsInADifferentPosition() {
+		initializeEmptyGuessingWord(4);
+		manager.updateGuessedWord('s');
+		assertArrayEquals(new char[] {'_','_','s','_'}, manager.getGuessingWord());
+	}
+	
+	@Test 
+	public void testUpdateGuessedWordWhenExactlyOneCharAppearsInTwoPositions() {
+		initializeEmptyGuessingWord(4);
+		manager.updateGuessedWord('t');
+		assertArrayEquals(new char[] {'t','_','_','t'}, manager.getGuessingWord());
+	}
+	
+	@Test 
+	public void testUpdateGuessedWordWhenExactlyOneCharAppearsInMoreThanTwoPositions() {
+		manager = new StringManager("testt");
+		initializeEmptyGuessingWord(5);
+		manager.updateGuessedWord('t');
+		assertArrayEquals(new char[] {'t','_','_','t','t'}, manager.getGuessingWord());
+	}
 }
