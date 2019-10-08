@@ -5,14 +5,10 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class TestStringManager {
 	
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 	private StringManager manager;
 	
 	@Before
@@ -37,20 +33,6 @@ public class TestStringManager {
 		assertArrayEquals(new char[] {StringManager.EMPTY_CHAR, StringManager.EMPTY_CHAR, StringManager.EMPTY_CHAR, StringManager.EMPTY_CHAR}, manager.getGuessingWord());
 	}
 
-	
-	@Test
-	public void testUpdateGuessedWordWhenNumericCharShouldThrown() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Invalid character");
-		manager.updateGuessedWord('1');
-	}
-	
-	@Test
-	public void testUpdateGuessedWordWhenSpecialCharacterShouldThrown() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Invalid character");
-		manager.updateGuessedWord('$');
-	}
 	
 	@Test
 	public void testUpdateGuessedWordWhenCharNotAppears() {

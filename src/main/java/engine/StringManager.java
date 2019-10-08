@@ -24,8 +24,6 @@ public class StringManager {
 	}
 
 	public void updateGuessedWord(char c) {
-		if (!Character.isAlphabetic(c))
-			throw new IllegalArgumentException("Invalid character");
 		List<Integer> indexes = analyser.seekChars(c);
 		indexes.forEach(index -> guessingWord[index] = c);
 	}
