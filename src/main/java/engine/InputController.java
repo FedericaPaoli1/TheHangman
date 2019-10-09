@@ -25,7 +25,6 @@ public class InputController {
 			return true;
 	
 		this.alreadyTyped.add(c);
-		
 		return false;
 	}
 
