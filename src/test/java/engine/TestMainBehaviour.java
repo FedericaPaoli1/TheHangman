@@ -5,8 +5,13 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 
+import javax.print.attribute.standard.MediaSize.Other;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.AdditionalMatchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -128,7 +133,10 @@ public class TestMainBehaviour {
 		assertThat(behaviour.isGameEnded()).isFalse();
 	}
 
+	
+	// TODO da completare
 	@Test
+	@Ignore
 	public void testGameLoopWhenThereAreAllCorrectInputChars() {
 
 		when(ui.getInputChar()).thenReturn('t').thenReturn('e').thenReturn('s');
@@ -136,31 +144,40 @@ public class TestMainBehaviour {
 
 		behaviour.setErrorCounter(0);
 		behaviour.gameLoop();
-
-		InOrder inOrder = inOrder(behaviour, ui);
-
-		for (char c : Arrays.asList('t', 'e', 's')) {
-			inOrder.verify(ui).getInputChar();
-			inOrder.verify(behaviour).executeControl(c);
-		}
+		
+		InOrder inOrder = inOrder(ui); 
+		
+//		verify(ui, times(3)).printGuessingWord(any(char[].class));
+		inOrder.verify(ui).getInputChar();
+		inOrder.verify(ui).printGuessingWord(
+				AdditionalMatchers.aryEq(new char[]{'t', 'e', 's', 't'}));
+		inOrder.verify(ui).getInputChar();
+		inOrder.verify(ui).printGuessingWord(
+				AdditionalMatchers.aryEq(new char[]{'t', '_', '_', 't'}));
+		inOrder.verify(ui).printGuessingWord(
+				AdditionalMatchers.aryEq(new char[]{'t', 'e', '_', 't'}));
+		inOrder.verify(ui).getInputChar();
+		assertThat(behaviour.getErrorCounter()).isZero();
 	}
+	
 
 	@Test
 	public void testGameLoopWhenThereAreNoCorrectInputChars() {
 
-		when(ui.getInputChar()).thenReturn('a').thenReturn('b').thenReturn('c').thenReturn('d').thenReturn('f')
+		when(ui.getInputChar()).thenReturn('a')
+				.thenReturn('b')
+				.thenReturn('c')
+				.thenReturn('d')
+				.thenReturn('f')
 				.thenReturn('g');
 		doReturn(false).when(executive).isWordCompleted();
 
 		behaviour.setErrorCounter(0);
 		behaviour.gameLoop();
-
-		InOrder inOrder = inOrder(behaviour, ui);
-
-		for (char c : Arrays.asList('a', 'b', 'c', 'd', 'f', 'g')) {
-			inOrder.verify(ui).getInputChar();
-			inOrder.verify(behaviour).executeControl(c);
-		}
+		
+		verify(ui, times(6)).getInputChar();
+		verify(ui, never()).printGuessingWord(any(char[].class));
+		assertThat(behaviour.getErrorCounter()).isEqualTo(6);
 
 	}
 

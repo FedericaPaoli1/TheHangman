@@ -1,6 +1,8 @@
 package engine;
 
 
+import java.util.Arrays;
+
 import exceptions.CharAbsenceException;
 import exceptions.IllegalCharException;
 import ui.UserInterface;
@@ -23,6 +25,7 @@ public class MainBehaviour {
 		try {
 			char[] guessingWord = executive.performCharControl(c);
 			ui.printGuessingWord(guessingWord);
+			System.out.println(Arrays.toString(guessingWord));
 		} catch (CharAbsenceException charAbs) {
 			errorCounter++;
 			ui.printExceptionMessage(charAbs);
