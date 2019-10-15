@@ -3,6 +3,8 @@ package engine;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import exceptions.NotAlphabeticCharException;
+
 public class InputController {
 
 	private String finalWord;
@@ -17,10 +19,9 @@ public class InputController {
 			return finalWord.indexOf(c) >= 0;
 	}
 
-	public boolean isAlreadyTyped(char c) 
-	{
+	public boolean isAlreadyTyped(char c) throws NotAlphabeticCharException{
 		if (!Character.isAlphabetic(c))
-			throw new IllegalArgumentException("Invalid character");
+			throw new NotAlphabeticCharException("Char is not alphabetic");
 		if (alreadyTyped.contains(c))
 			return true;
 	

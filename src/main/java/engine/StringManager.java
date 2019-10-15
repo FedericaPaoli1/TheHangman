@@ -28,4 +28,12 @@ public class StringManager {
 		indexes.forEach(index -> guessingWord[index] = c);
 	}
 
+	public boolean isWordCompleted() {
+		for(char c: guessingWord) {
+			if(c == '_')
+				return false;
+		}
+		return true;
+	}
+
 }

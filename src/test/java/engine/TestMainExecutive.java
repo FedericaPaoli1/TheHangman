@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import exceptions.AlreadyTypedException;
 import exceptions.CharAbsenceException;
-import exceptions.IllegalCharException;
+import exceptions.NotAlphabeticCharException;
 
 public class TestMainExecutive {
 
@@ -54,19 +54,6 @@ public class TestMainExecutive {
 		verify(manager).getGuessingWord();
 	}
 
-	/*
-	 * @Test public void
-	 * testPerformCharControlWhenCharIsNotPresentHasSameGuessingWord() { char
-	 * present = 'e', notPresent = 'a';
-	 * doNothing().when(manager).updateGuessedWord(present);
-	 * doNothing().when(manager).updateGuessedWord(notPresent); doReturn(new char[]
-	 * {'_', present, '_', '_'}) .doReturn(new char[] {'_', present, '_', '_'})
-	 * .when(manager).getGuessingWord();
-	 * 
-	 * assertThat(exec.performCharControl(present)).isEqualTo(exec.
-	 * performCharControl(notPresent)); }
-	 */
-
 	@Test
 	public void testPerformCharControlWhenCharIsNotPresent() {
 		doReturn(false).when(controller).isPresent('a');
@@ -76,7 +63,7 @@ public class TestMainExecutive {
 	}
 
 	@Test
-	public void testPerformCharControlWhenCharIsAlreadyTyped() {
+	public void testPerformCharControlWhenCharIsAlreadyTyped() throws Exception {
 		doReturn(true).when(controller).isAlreadyTyped(anyChar());
 
 		assertThatThrownBy(() -> exec.performCharControl(anyChar())).isInstanceOf(AlreadyTypedException.class);
@@ -86,13 +73,28 @@ public class TestMainExecutive {
 	}
 	
 	@Test
-	public void testPerformCharControlWhenCharIsNotAlphabetic() {
-		doThrow(IllegalArgumentException.class).when(controller).isAlreadyTyped('$');
+	public void testPerformCharControlWhenCharIsNotAlphabetic() throws Exception {
+		doThrow(NotAlphabeticCharException.class).when(controller).isAlreadyTyped('$');
 
-		assertThatThrownBy(() -> exec.performCharControl('$')).isInstanceOf(IllegalCharException.class);
+		assertThatThrownBy(() -> exec.performCharControl('$')).isInstanceOf(NotAlphabeticCharException.class);
 		
 		verify(controller, never()).isPresent(anyChar());
 		verify(manager, never()).updateGuessedWord(anyChar());
 	}
-
+	
+	@Test
+	public void testIsWordCompletedWhenNoEmptyCharAppears() {
+		doReturn(true).when(manager).isWordCompleted();
+		
+		assertThat(exec.isWordCompleted()).isTrue();
+		verify(manager).isWordCompleted();
+	}
+	
+	@Test
+	public void testIsWordCompletedWhenOneOrMoreEmptyCharAppear() {
+		doReturn(false).when(manager).isWordCompleted();
+		
+		assertThat(exec.isWordCompleted()).isFalse();
+		verify(manager).isWordCompleted();
+	}
 }

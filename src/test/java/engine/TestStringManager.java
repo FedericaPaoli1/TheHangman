@@ -1,6 +1,7 @@
 package engine;
 
 import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Arrays;
 
@@ -79,4 +80,23 @@ public class TestStringManager {
 		manager.updateGuessedWord('t');
 		assertArrayEquals(new char[] {'t','_','_','t','t'}, manager.getGuessingWord());
 	}
+	
+	@Test
+	public void testIsWordCompletedWhenNoEmptyCharAppears() {
+		manager.setGuessingWord(new char[] {'t','e','s','t'});
+		assertThat(manager.isWordCompleted()).isTrue();
+	}
+	
+	@Test
+	public void testIsWordCompletedWhenAnEmptyCharAppears() {
+		manager.setGuessingWord(new char[] {'t','e','_','t'});
+		assertThat(manager.isWordCompleted()).isFalse();
+	}
+
+	@Test
+	public void testIsWordCompletedWhenSeveralEmptyCharAppear() {
+		manager.setGuessingWord(new char[] {'_','e','s','_'});
+		assertThat(manager.isWordCompleted()).isFalse();
+	}
+	
 }

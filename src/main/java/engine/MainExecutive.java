@@ -3,6 +3,7 @@ package engine;
 import exceptions.AlreadyTypedException;
 import exceptions.CharAbsenceException;
 import exceptions.IllegalCharException;
+import exceptions.NotAlphabeticCharException;
 
 public class MainExecutive {
 
@@ -19,14 +20,18 @@ public class MainExecutive {
 	public char[] performCharControl(char c) throws CharAbsenceException, AlreadyTypedException, IllegalCharException {
 		try {
 			if (controller.isAlreadyTyped(c))
-				throw new AlreadyTypedException();
-		} catch (IllegalArgumentException e) {
-			throw new IllegalCharException();
+				throw new AlreadyTypedException("Char already typed");
+		} catch (NotAlphabeticCharException notAlph) {
+			throw notAlph;
 		}
 		if (!controller.isPresent(c))
-			throw new CharAbsenceException();
+			throw new CharAbsenceException("Char not present");
 		manager.updateGuessedWord(c);
 		return manager.getGuessingWord();
+	}
+
+	public boolean isWordCompleted() {
+		return manager.isWordCompleted();
 	}
 
 }

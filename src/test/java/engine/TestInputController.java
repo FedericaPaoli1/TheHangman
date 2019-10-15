@@ -1,7 +1,6 @@
 package engine;
 
 import static org.junit.Assert.*;
-import static org.assertj.core.api.Assertions.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +10,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import exceptions.NotAlphabeticCharException;
+
 
 public class TestInputController {
 	
@@ -46,19 +48,19 @@ public class TestInputController {
 	}
 	
 	@Test
-	public void testIsAlreadyTypedWhenItIsTheFirstTime() {
+	public void testIsAlreadyTypedWhenItIsTheFirstTime() throws Exception {
 		assertFalse(controller.isAlreadyTyped('a'));
 		assertTrue(alreadyTyped.contains('a'));
 	}
 	
 	@Test
-	public void testIsAlreadyTypedWhenItIsTheFirstTimeOfAnotherChar() {
+	public void testIsAlreadyTypedWhenItIsTheFirstTimeOfAnotherChar() throws Exception {
 		assertFalse(controller.isAlreadyTyped('e'));
 		assertTrue(alreadyTyped.contains('e'));
 	}
 	
 	@Test
-	public void testIsAlreadyTypedWhenItIsAlreadyPresent() 
+	public void testIsAlreadyTypedWhenItIsAlreadyPresent() throws Exception 
 	{
 		char charToTest = 'e';
 		alreadyTyped.add(charToTest);
@@ -69,17 +71,17 @@ public class TestInputController {
 	}
 	
 	@Test
-	public void testIsAlreadyTypedWhenNumericCharShouldThrown() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Invalid character");
+	public void testIsAlreadyTypedWhenNumericCharShouldThrown() throws Exception {
+		thrown.expect(NotAlphabeticCharException.class);
+		thrown.expectMessage("Char is not alphabetic");
 		controller.isAlreadyTyped('1');
 		//assertFalse(alreadyTyped.contains('1'));
 	}
 	
 	@Test
-	public void testIsAlreadyTypedWhenSpecialCharacterShouldThrown() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Invalid character");
+	public void testIsAlreadyTypedWhenSpecialCharacterShouldThrown() throws Exception {
+		thrown.expect(NotAlphabeticCharException.class);
+		thrown.expectMessage("Char is not alphabetic");
 		controller.isAlreadyTyped('$');
 		//assertFalse(alreadyTyped.contains('1'));
 	}
