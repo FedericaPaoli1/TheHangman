@@ -132,19 +132,6 @@ public class TestMainBehaviour {
 		assertThat(behaviour.isGameEnded()).isFalse();
 	}
 	
-	@Test/*	@Test
-	public void testGameLoopWhenInputCharIsTyped() {
-	UserInterface ui = mock(UserInterface.class);
-	MainExecutive executive = spy(new MainExecutive("test", new StringManager("test"), new InputController("test")));
-	MainBehaviour behaviour = spy(new MainBehaviour(executive, ui));
-
-	doReturn('e').when(ui).getInputChar();
-	
-	behaviour.gameLoop();
-	
-	verify(ui).getInputChar();
-	verify(behaviour).executeControl('e');
-}	*/
 	public void testGameLoopWhenThereAreAllCorrectInputChars() {
 		UserInterface ui = mock(UserInterface.class);
 		MainExecutive executive = spy(new MainExecutive("test", new StringManager("test"), new InputController("test")));

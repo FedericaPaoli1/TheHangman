@@ -3,21 +3,21 @@ package graphics;
 public class Stickman {
 	
 	public static final String[] BACKING = {
-			"_____________", 
-			"|           |", 
-			"|           |", 
-			"|           |",
-            "|",           
-            "|",         
-            "|",          
-            "|",        
-            "|",          
-            "|",           
-            "|",          
-            "|",         
-            "|",         
-            "|",
-            "|"
+			" ___________\n", 
+			"|           |\n", 
+			"|           |\n", 
+			"|           |\n",
+            "|\n",           
+            "|\n",         
+            "|\n",          
+            "|\n",        
+            "|\n",          
+            "|\n",           
+            "|\n",          
+            "|\n",         
+            "|\n",         
+            "|\n",
+            "|\n"
     };
 	
 	
@@ -128,5 +128,7 @@ public class Stickman {
             "|",
             "|"
     };
+	
+	public static final String[][] FIGURES = {BACKING, HEAD, BODY, RIGHT_ARM, ARMS, RIGHT_FOOT, COMPLETE_STICKMAN};
 
 }
