@@ -1,22 +1,22 @@
 package engine;
 
 
-import java.util.Arrays;
-
 import exceptions.CharAbsenceException;
 import exceptions.IllegalCharException;
 import ui.UserInterface;
 
 public class MainBehaviour {
 
+	/*
+	 * test visibilitys
+	 */
+	static final int MAX_ERROR_NUMBER = 6;
+	
 	private MainExecutive executive;
 	private int errorCounter;
 	private UserInterface ui;
 
-	public MainBehaviour() {
-	}
-
-	MainBehaviour(MainExecutive executive, UserInterface ui) {
+	public MainBehaviour(MainExecutive executive, UserInterface ui) {
 		this.executive = executive;
 		this.ui = ui;
 	}
@@ -25,7 +25,6 @@ public class MainBehaviour {
 		try {
 			char[] guessingWord = executive.performCharControl(c);
 			ui.printGuessingWord(guessingWord);
-			System.out.println(Arrays.toString(guessingWord));
 		} catch (CharAbsenceException charAbs) {
 			errorCounter++;
 			ui.printExceptionMessage(charAbs);
@@ -52,8 +51,7 @@ public class MainBehaviour {
 
 	public boolean isGameEnded() {
 		boolean isCompleted = executive.isWordCompleted();
-		boolean isLimitNumber = errorCounter >= 6;
+		boolean isLimitNumber = errorCounter >= MAX_ERROR_NUMBER;
 		return isCompleted || isLimitNumber;
 	}
-
 }

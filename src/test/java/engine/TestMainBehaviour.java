@@ -3,38 +3,30 @@ package engine;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Arrays;
-
-import javax.print.attribute.standard.MediaSize.Other;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.AdditionalMatchers;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import exceptions.AlreadyTypedException;
-import exceptions.CharAbsenceException;
-import exceptions.IllegalCharException;
-import exceptions.NotAlphabeticCharException;
+import exceptions.*;
 import ui.UserInterface;
-
-/*
- * TODO togliere lo spy dalla SUT, è necessario verificare la chimata di altri metodis
- */
 
 public class TestMainBehaviour {
 
+	private static final String FINAL_WORD = "test";
+	
 	@Mock
 	private UserInterface ui;
+	
 	@Spy
-	private MainExecutive executive = new MainExecutive("test", new StringManager("test"), new InputController("test"));
-	@Spy
+	private MainExecutive executive = new MainExecutive(
+			FINAL_WORD, 
+			new StringManager(FINAL_WORD), 
+			new InputController(FINAL_WORD)
+		);
+	
 	@InjectMocks
 	private MainBehaviour behaviour;
 
@@ -65,7 +57,7 @@ public class TestMainBehaviour {
 		behaviour.executeControl('a');
 
 		verify(executive).performCharControl('a');
-		assertThat(behaviour.getErrorCounter()).isEqualTo(1);
+		assertThat(behaviour.getErrorCounter()).isOne();
 		verify(ui).printExceptionMessage(isA(CharAbsenceException.class));
 	}
 
@@ -112,7 +104,7 @@ public class TestMainBehaviour {
 	@Test
 	public void testIsGameEndedWhenErrorCounterIsGreaterThanMaximumNumber() {
 
-		behaviour.setErrorCounter(7);
+		behaviour.setErrorCounter(MainBehaviour.MAX_ERROR_NUMBER + 1);
 
 		assertThat(behaviour.isGameEnded()).isTrue();
 	}
@@ -120,7 +112,7 @@ public class TestMainBehaviour {
 	@Test
 	public void testIsGameEndedWhenErrorCounterIsEqualToMaximumNumber() {
 
-		behaviour.setErrorCounter(6);
+		behaviour.setErrorCounter(MainBehaviour.MAX_ERROR_NUMBER);
 
 		assertThat(behaviour.isGameEnded()).isTrue();
 	}
@@ -131,12 +123,15 @@ public class TestMainBehaviour {
 		behaviour.setErrorCounter(0);
 
 		assertThat(behaviour.isGameEnded()).isFalse();
+		
+		behaviour.setErrorCounter(MainBehaviour.MAX_ERROR_NUMBER - 1);
+	
+		assertThat(behaviour.isGameEnded()).isFalse();
+		
 	}
 
 	
-	// TODO da completare
 	@Test
-	@Ignore
 	public void testGameLoopWhenThereAreAllCorrectInputChars() {
 
 		when(ui.getInputChar()).thenReturn('t').thenReturn('e').thenReturn('s');
@@ -144,19 +139,10 @@ public class TestMainBehaviour {
 
 		behaviour.setErrorCounter(0);
 		behaviour.gameLoop();
+				
+		verify(ui, times(3)).getInputChar();
+		verify(ui, times(3)).printGuessingWord(any(char[].class));
 		
-		InOrder inOrder = inOrder(ui); 
-		
-//		verify(ui, times(3)).printGuessingWord(any(char[].class));
-		inOrder.verify(ui).getInputChar();
-		inOrder.verify(ui).printGuessingWord(
-				AdditionalMatchers.aryEq(new char[]{'t', 'e', 's', 't'}));
-		inOrder.verify(ui).getInputChar();
-		inOrder.verify(ui).printGuessingWord(
-				AdditionalMatchers.aryEq(new char[]{'t', '_', '_', 't'}));
-		inOrder.verify(ui).printGuessingWord(
-				AdditionalMatchers.aryEq(new char[]{'t', 'e', '_', 't'}));
-		inOrder.verify(ui).getInputChar();
 		assertThat(behaviour.getErrorCounter()).isZero();
 	}
 	
@@ -177,7 +163,7 @@ public class TestMainBehaviour {
 		
 		verify(ui, times(6)).getInputChar();
 		verify(ui, never()).printGuessingWord(any(char[].class));
-		assertThat(behaviour.getErrorCounter()).isEqualTo(6);
+		assertThat(behaviour.getErrorCounter()).isEqualTo(MainBehaviour.MAX_ERROR_NUMBER);
 
 	}
 
@@ -196,11 +182,10 @@ public class TestMainBehaviour {
 
 		doReturn(false).when(executive).isWordCompleted();
 
-		behaviour.setErrorCounter(6);
+		behaviour.setErrorCounter(MainBehaviour.MAX_ERROR_NUMBER);
 		behaviour.gameLoop();
 
 		verify(ui).isGameWon(false);
 
 	}
-
 }
