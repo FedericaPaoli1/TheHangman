@@ -14,9 +14,6 @@ public class StringAnalyser {
 	public List<Integer> seekChars(char c) {
 		List<Integer> indexes = new ArrayList<Integer>();
 
-	/*	if (!Character.isAlphabetic(c))
-			throw new IllegalArgumentException("Invalid character");*/
-
 		for (int i = 0; i < string.length(); i++) {
 			if (string.charAt(i) == c)
 				indexes.add(i);

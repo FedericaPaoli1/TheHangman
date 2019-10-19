@@ -37,7 +37,7 @@ public class TestTerminalUI {
 		terminal = new TerminalUI(in, 4);
 
 		verify(out).println("\nGuessing word:");
-		verify(out).print("_ _ _ _");
+		verify(out).println("_ _ _ _");
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class TestTerminalUI {
 		terminal = new TerminalUI(in, 6);
 
 		verify(out).println("\nGuessing word:");
-		verify(out).print("_ _ _ _ _ _");
+		verify(out).println("_ _ _ _ _ _");
 	}
 
 	@Test
@@ -228,7 +228,7 @@ public class TestTerminalUI {
 		InOrder inOrder = inOrder(out);
 		inOrder.verify(out).println("Char not present");
 		inOrder.verify(out)
-				.print(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", ""));
+				.println(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", "\n"));
 	}
 	
 	@Test
@@ -243,7 +243,7 @@ public class TestTerminalUI {
 		InOrder inOrder = inOrder(out);
 		inOrder.verify(out).println("Char not present");
 		inOrder.verify(out)
-				.print(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", ""));
+				.println(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", "\n"));
 	}
 
 	@Test
@@ -254,7 +254,7 @@ public class TestTerminalUI {
 
 		terminal.printGuessingWord(new char[] { 't', 'e', 's', 't' });
 
-		verify(out).print("t e s t");
+		verify(out).println("t e s t");
 	}
 
 	@Test
@@ -265,7 +265,7 @@ public class TestTerminalUI {
 
 		terminal.printGuessingWord(new char[] { '_', 'e', '_', '_' });
 
-		verify(out).print("_ e _ _");
+		verify(out).println("_ e _ _");
 	}
 
 	@Test
@@ -276,7 +276,7 @@ public class TestTerminalUI {
 
 		terminal.printGuessingWord(new char[] { '_', '_', '_', '_' });
 
-		verify(out).print("_ _ _ _");
+		verify(out).println("_ _ _ _");
 	}
 
 	@Test
@@ -287,6 +287,6 @@ public class TestTerminalUI {
 
 		terminal.printStatus(0);
 
-		verify(out).print(Arrays.toString(Stickman.FIGURES[0]).replace("[", "").replace("]", "").replace(", ", ""));
+		verify(out).println(Arrays.toString(Stickman.FIGURES[0]).replace("[", "").replace("]", "").replace(", ", "\n"));
 	}
 }

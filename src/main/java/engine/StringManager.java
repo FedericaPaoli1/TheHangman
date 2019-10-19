@@ -7,7 +7,7 @@ public class StringManager {
 
 	static final char EMPTY_CHAR = '_';
 	private char[] guessingWord = {};
-	StringAnalyser analyser;
+	private StringAnalyser analyser;
 	
 	public StringManager(String finalWord) {
 		this.guessingWord = new char[finalWord.length()];
@@ -34,6 +34,10 @@ public class StringManager {
 				return false;
 		}
 		return true;
+	}
+
+	void setAnalyser(StringAnalyser analyser) {
+		this.analyser = analyser;
 	}
 
 }

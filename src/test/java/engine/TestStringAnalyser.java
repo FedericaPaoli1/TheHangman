@@ -53,20 +53,6 @@ public class TestStringAnalyser {
 		}
 		assertEquals(stringLength, result.size());
 	}
-	
-/*	@Test
-	public void testSeekCharsWhenNumericCharShouldThrown() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Invalid character");
-		analyser.seekChars('1');
-	}
-	
-	@Test
-	public void testSeekCharsWhenSpecialCharacterShouldThrown() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Invalid character");
-		analyser.seekChars('$');
-	}*/
  
 
 }

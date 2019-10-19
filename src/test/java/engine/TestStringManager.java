@@ -2,6 +2,7 @@ package engine;
 
 import static org.junit.Assert.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 
@@ -73,12 +74,21 @@ public class TestStringManager {
 		assertArrayEquals(new char[] {'t','_','_','t'}, manager.getGuessingWord());
 	}
 	
+	// Nel REFACTORING => eliminare StringAnalyser e mettere tutto in StringManager
+
 	@Test 
-	public void testUpdateGuessedWordWhenExactlyOneCharAppearsInMoreThanTwoPositions() {
+	public void testUpdateGuessedWordWhenExactlyOneCharAppearsInMoreThanTwoPositionsMOCK() {
+		StringAnalyser analyser = spy(new StringAnalyser("testt"));
 		manager = new StringManager("testt");
+		manager.setAnalyser(analyser);
 		initializeEmptyGuessingWord(5);
+		
+		doReturn(Arrays.asList(0, 3, 4)).when(analyser).seekChars('t');
+		
 		manager.updateGuessedWord('t');
+		
 		assertArrayEquals(new char[] {'t','_','_','t','t'}, manager.getGuessingWord());
+		verify(analyser).seekChars('t');
 	}
 	
 	@Test

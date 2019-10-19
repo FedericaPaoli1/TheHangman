@@ -3,7 +3,6 @@ package ui;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.function.IntPredicate;
 
 import exceptions.CharAbsenceException;
 import graphics.Stickman;
@@ -20,6 +19,7 @@ public class TerminalUI implements UserInterface {
 		Arrays.fill(guessingWord, '_');
 		printGuessingWord(guessingWord);
 		this.errorCounter = 0;
+		printStatus(this.errorCounter);
 	}
 
 	@Override
@@ -27,7 +27,6 @@ public class TerminalUI implements UserInterface {
 		Scanner scanner = new Scanner(in);
 		System.out.print("Insert a char: ");
 		char c = (scanner.hasNext()) ? scanner.next().charAt(0) : ' ';
-		scanner.close();
 		return c;
 	}
 
@@ -35,7 +34,8 @@ public class TerminalUI implements UserInterface {
 	public void isGameWon(boolean isWordCompleted) {
 		if (isWordCompleted == false)
 			System.out.println("OH NO!\nYou've finished your remaining attempts =(\n--------GAME OVER--------");
-		System.out.println("Congratulations!\nYOU WON =)\n--------GAME OVER--------");
+		else
+			System.out.println("Congratulations!\nYOU WON =)\n--------GAME OVER--------");
 
 	}
 
@@ -50,11 +50,12 @@ public class TerminalUI implements UserInterface {
 
 	@Override
 	public void printGuessingWord(char[] guessingWord) {
-		System.out.print(Arrays.toString(guessingWord).replace("[","").replace("]","") .replace(", "," "));
+		System.out.println(Arrays.toString(guessingWord).replace("[", "").replace("]", "").replace(", ", " "));
 	}
 
 	public void printStatus(int figureIndex) {
-		System.out.print(Arrays.toString(Stickman.FIGURES[figureIndex]).replace("[", "").replace("]", "").replace(", ", ""));
+		System.out.println(
+				Arrays.toString(Stickman.FIGURES[figureIndex]).replace("[", "").replace("]", "").replace(", ", "\n"));
 	}
 
 	public int getErrorCounter() {

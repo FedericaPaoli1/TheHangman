@@ -129,13 +129,8 @@ public class TestMainBehaviour {
 		assertThat(behaviour.isGameEnded()).isFalse();
 		
 	}
-<<<<<<< HEAD
-	
-=======
-
 	
 	@Test
->>>>>>> refactoring
 	public void testGameLoopWhenThereAreAllCorrectInputChars() {
 
 		when(ui.getInputChar()).thenReturn('t').thenReturn('e').thenReturn('s');
