@@ -2,6 +2,7 @@ package engine;
 
 import static engine.StringManager.EMPTY_CHAR;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 

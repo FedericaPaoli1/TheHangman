@@ -7,9 +7,9 @@ public class Stickman {
 			"|           |", 
 			"|           |", 
 			"|           |",
-            "|",           
-            "|",         
-            "|",          
+			"|", 
+            "|",      
+            "|",        
             "|",        
             "|",          
             "|",           
@@ -128,5 +128,7 @@ public class Stickman {
             "|",
             "|"
     };
+	
+	public static final String[][] FIGURES = {BACKING, HEAD, BODY, RIGHT_ARM, ARMS, RIGHT_FOOT, COMPLETE_STICKMAN};
 
 }

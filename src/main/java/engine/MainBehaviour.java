@@ -3,12 +3,13 @@ package engine;
 
 import exceptions.CharAbsenceException;
 import exceptions.IllegalCharException;
+import ui.TerminalUI;
 import ui.UserInterface;
 
 public class MainBehaviour {
 
 	/*
-	 * test visibilitys
+	 * test visibility
 	 */
 	static final int MAX_ERROR_NUMBER = 6;
 	
@@ -53,5 +54,12 @@ public class MainBehaviour {
 		boolean isCompleted = executive.isWordCompleted();
 		boolean isLimitNumber = errorCounter >= MAX_ERROR_NUMBER;
 		return isCompleted || isLimitNumber;
+	}
+	
+	public static void main(String[] args) {
+		UserInterface terminal = new TerminalUI(System.in, 4);
+		MainExecutive exec = new MainExecutive("test", new StringManager("test"), new InputController("test"));
+		MainBehaviour behav = new MainBehaviour(exec, terminal);
+		behav.gameLoop();
 	}
 }

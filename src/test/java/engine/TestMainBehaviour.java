@@ -129,7 +129,6 @@ public class TestMainBehaviour {
 		assertThat(behaviour.isGameEnded()).isFalse();
 		
 	}
-
 	
 	@Test
 	public void testGameLoopWhenThereAreAllCorrectInputChars() {
