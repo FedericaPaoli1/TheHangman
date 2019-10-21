@@ -1,17 +1,18 @@
 package engine;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class StringManager {
 
 	static final char EMPTY_CHAR = '_';
-	private char[] guessingWord = {};
-	private StringAnalyser analyser;
 	
-	public StringManager(String finalWord) {
+	private char[] guessingWord = {};
+	private String finalWord;
+	
+	public StringManager(String finalWord) 
+	{
+		this.finalWord = finalWord;
 		this.guessingWord = new char[finalWord.length()];
-		this.analyser =  new StringAnalyser(finalWord);
 		Arrays.fill(this.guessingWord, EMPTY_CHAR);
 	}
 
@@ -24,20 +25,18 @@ public class StringManager {
 	}
 
 	public void updateGuessedWord(char c) {
-		List<Integer> indexes = analyser.seekChars(c);
-		indexes.forEach(index -> guessingWord[index] = c);
+		for (int index = finalWord.indexOf(c); index >= 0; index = finalWord.indexOf(c, index + 1))
+			guessingWord[index] = c;
+	
 	}
-
+	
+	
 	public boolean isWordCompleted() {
 		for(char c: guessingWord) {
 			if(c == '_')
 				return false;
 		}
 		return true;
-	}
-
-	void setAnalyser(StringAnalyser analyser) {
-		this.analyser = analyser;
 	}
 
 }
