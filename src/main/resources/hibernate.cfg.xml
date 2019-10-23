@@ -8,13 +8,24 @@
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.connection.password">root</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/HangmanDB</property>
+		<property name="hibernate.hbm2ddl.auto">create</property>
+
 		<property name="show_sql">true</property>
-		<property name="hibernate.hbm2ddl.auto">create-drop</property>
 		<property name="hibernate.current_session_context_class">
 			org.hibernate.context.internal.ThreadLocalSessionContext
 		</property>
-		
-		<mapping
-			class="repository.Word" />
+
+		<!-- initial load script fetch -->
+		<property name="javax.persistence.sql-load-script-source">src/main/resources/load.sql</property>
+
+		<!-- For SSL warnings -->
+		<property name="hibernate.connection.requireSSL">false</property>
+		<property name="hibernate.connection.autoReconnect">true</property>
+
+		<!-- Resolution for connection pool -->
+		<property name="hibernate.c3p0.min_size">10</property>
+
+		<mapping class="repository.Word" />
+
 	</session-factory>
 </hibernate-configuration>
