@@ -20,7 +20,7 @@ public class TestConfigurationBuilder {
 	}
 
 	@Test
-	public void testBuildSetAllParameters() {
+	public void testBuildSetsAllParameters() {
 		builder.withExposedPort(PORT)
 			.withPassword(PASSWORD)
 			.withUsername(USERNAME);
