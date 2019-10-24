@@ -32,7 +32,7 @@ public class TerminalUI implements UserInterface {
 
 	@Override
 	public void isGameWon(boolean isWordCompleted) {
-		if (isWordCompleted == false)
+		if (!isWordCompleted)
 			System.out.println("OH NO!\nYou've finished your remaining attempts =(\n--------GAME OVER--------");
 		else
 			System.out.println("Congratulations!\nYOU WON =)\n--------GAME OVER--------");

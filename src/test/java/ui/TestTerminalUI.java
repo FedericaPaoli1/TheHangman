@@ -199,7 +199,7 @@ public class TestTerminalUI {
 	}
 
 	@Test
-	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrownForTheFirstTimeCausesErrorCounterIncrementing() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesErrorCounterIncrementing() {
 		terminal.setErrorCounter(0);
 
 		terminal.printExceptionMessage(new CharAbsenceException("Char not present"));
@@ -208,7 +208,7 @@ public class TestTerminalUI {
 	}
 
 	@Test
-	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrownForMoreThanOneTimeCausesErrorCounterIncrementing() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForMoreThanOneTimeCausesErrorCounterIncrementing() {
 		terminal.setErrorCounter(1);
 
 		terminal.printExceptionMessage(new CharAbsenceException("Char not present"));
@@ -217,7 +217,7 @@ public class TestTerminalUI {
 	}
 	
 	@Test
-	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrownForTheFirstTimeCausesStickmanPrinting() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesStickmanPrinting() {
 		PrintStream out = mock(PrintStream.class);
 		terminal.setErrorCounter(0);
 
@@ -232,7 +232,7 @@ public class TestTerminalUI {
 	}
 	
 	@Test
-	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrownForForMoreThanOneTimeCausesStickmanPrinting() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForForMoreThanOneTimeCausesStickmanPrinting() {
 		PrintStream out = mock(PrintStream.class);
 		terminal.setErrorCounter(1);
 
