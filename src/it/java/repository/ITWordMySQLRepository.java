@@ -30,11 +30,11 @@ public class ITWordMySQLRepository {
 	public static void beforeClass() {
 		mysql.start();
 
-		conf = new Configuration().configure();
-
-		conf.setProperty("hibernate.connection.url", mysql.getJdbcUrl() + "?useSSL=false")
-				.setProperty("hibernate.connection.username", mysql.getUsername())
-				.setProperty("hibernate.connection.password", mysql.getPassword());
+		conf = new ConfigurationBuilder()
+				.withExposedPort(mysql.getFirstMappedPort().toString())
+				.withPassword(mysql.getPassword())
+				.withUsername(mysql.getUsername())
+				.build();
 	}
 
 	@Before
