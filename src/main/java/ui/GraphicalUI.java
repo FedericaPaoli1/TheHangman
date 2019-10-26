@@ -68,6 +68,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 	 * Create the frame.
 	 */
 	public GraphicalUI(int guessingWordLength) {
+		setTitle("The Hangman");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 950, 638);
 		contentPane = new JPanel();
@@ -171,11 +172,12 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.add(lblMisses, gbc_lblMisses);
 
 		missesTextField = new JTextField();
+		missesTextField.setFont(new Font("Dialog", Font.PLAIN, 15));
 		missesTextField.setName("missesTextBox");
 		missesTextField.setEditable(false);
 		missesTextField.setText("");
 		GridBagConstraints gbc_missesTextField = new GridBagConstraints();
-		gbc_missesTextField.gridwidth = 2;
+		gbc_missesTextField.gridwidth = 3;
 		gbc_missesTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_missesTextField.fill = GridBagConstraints.BOTH;
 		gbc_missesTextField.gridx = 2;
