@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.hbm2ddl.auto">create</property>
+
+		<property name="show_sql">true</property>
+		<property name="hibernate.current_session_context_class">
+			org.hibernate.context.internal.ThreadLocalSessionContext
+		</property>
+
+		<!-- initial load script fetch -->
+		<property name="javax.persistence.sql-load-script-source">src/main/resources/load.sql</property>
+
+		<!-- For SSL warnings -->
+		<property name="hibernate.connection.requireSSL">false</property>
+		<property name="hibernate.connection.autoReconnect">true</property>
+
+		<!-- Resolution for connection pool -->
+		<property name="hibernate.c3p0.min_size">10</property>
+
+		<mapping class="repository.Word" />
+
+	</session-factory>
+</hibernate-configuration>
