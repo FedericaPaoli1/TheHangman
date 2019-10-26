@@ -68,10 +68,10 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 92, 180, 62, 0, 0, 40, 25, 12, 28, 0, 0, 0, 0, 0, 0, 240, 0 };
+		gbl_contentPane.columnWidths = new int[] { 92, 180, 62, 0, 0, 40, 25, 12, 28, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_contentPane.rowHeights = new int[] { 17, 297, 0, 72, 49, 13, 39, 42, 39, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, Double.MIN_VALUE };
+				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
@@ -84,9 +84,9 @@ public class GraphicalUI extends JFrame implements UserInterface {
 			lblChar.setBackground(new Color(255, 255, 255));
 			lblChar.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 			GridBagConstraints gbc_lblChar = new GridBagConstraints();
-			gbc_lblChar.anchor = GridBagConstraints.WEST;
-			gbc_lblChar.insets = new Insets(0, 0, 5, 5);
-			gbc_lblChar.gridx = 5 + i + 1;
+			gbc_lblChar.anchor = GridBagConstraints.EAST;
+			gbc_lblChar.insets = new Insets(0, 1, 0, 1);
+			gbc_lblChar.gridx = 5 + i;
 			gbc_lblChar.gridy = 2;
 			contentPane.add(lblChar, gbc_lblChar);
 			charLabels[i] = lblChar;
@@ -114,8 +114,9 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		lblGameResult = new JLabel(" ");
 		lblGameResult.setName("gameResult");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.gridwidth = 10;
 		gbc_lblNewLabel_1.fill = GridBagConstraints.VERTICAL;
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_1.gridx = 15;
 		gbc_lblNewLabel_1.gridy = 1;
 		contentPane.add(lblGameResult, gbc_lblNewLabel_1);
@@ -170,7 +171,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		lblErrorMessage = new JLabel(" ");
 		lblErrorMessage.setName("errorMessage");
 		GridBagConstraints gbc_lblErrorMessage = new GridBagConstraints();
-		gbc_lblErrorMessage.insets = new Insets(0, 0, 5, 0);
+		gbc_lblErrorMessage.insets = new Insets(0, 0, 5, 5);
 		gbc_lblErrorMessage.gridwidth = 16;
 		gbc_lblErrorMessage.gridx = 0;
 		gbc_lblErrorMessage.gridy = 7;
@@ -180,7 +181,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 
 	@Override
 	public char getInputChar() {
-		return charTextField.getText().trim().charAt(0);
+		return Character.toLowerCase(charTextField.getText().trim().charAt(0));
 	}
 
 	@Override
