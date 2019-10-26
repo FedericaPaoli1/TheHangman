@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,12 +21,14 @@ import graphics.Stickman;
 public class TestTerminalUI {
 
 	private InputStream in;
+	private Scanner scanner;
 	private TerminalUI terminal;
 
 	@Before
 	public void setup() {
 		in = mock(InputStream.class);
-		terminal = new TerminalUI(in, 4);
+		scanner = new Scanner(in);
+		terminal = new TerminalUI(scanner, 4);
 	}
 	
 	@Test
@@ -33,8 +36,8 @@ public class TestTerminalUI {
 		PrintStream out = mock(PrintStream.class);
 
 		System.setOut(out);
-
-		terminal = new TerminalUI(in, 4);
+		
+		terminal = new TerminalUI(scanner, 4);
 
 		verify(out).println("\nGuessing word:");
 		verify(out).println("_ _ _ _");
@@ -46,7 +49,7 @@ public class TestTerminalUI {
 
 		System.setOut(out);
 
-		terminal = new TerminalUI(in, 6);
+		terminal = new TerminalUI(scanner, 6);
 
 		verify(out).println("\nGuessing word:");
 		verify(out).println("_ _ _ _ _ _");
@@ -54,8 +57,6 @@ public class TestTerminalUI {
 
 	@Test
 	public void testErrorCounterIsZeroWhenGameStarts() {
-		terminal = new TerminalUI(in, 4);
-
 		assertThat(terminal.getErrorCounter()).isZero();
 	}
 
@@ -64,9 +65,9 @@ public class TestTerminalUI {
 		PrintStream out = mock(PrintStream.class);
 
 		System.setOut(out);
-		System.setIn(new ByteArrayInputStream("e".getBytes()));
+		scanner = new Scanner(new ByteArrayInputStream("e".getBytes()));
 
-		terminal = new TerminalUI(System.in, 4);
+		terminal = new TerminalUI(scanner, 4);
 
 		char c = terminal.getInputChar();
 
@@ -75,8 +76,9 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenCharIsTyped() throws IOException {
-		System.setIn(new ByteArrayInputStream("e".getBytes()));
-		terminal = new TerminalUI(System.in, 4);
+		scanner = new Scanner(new ByteArrayInputStream("e".getBytes()));
+
+		terminal = new TerminalUI(scanner, 4);
 
 		char returned = terminal.getInputChar();
 
@@ -85,9 +87,9 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenAnotherCharIsTyped() throws IOException {
-		System.setIn(new ByteArrayInputStream("a".getBytes()));
-		terminal = new TerminalUI(System.in, 4);
+		scanner = new Scanner(new ByteArrayInputStream("a".getBytes()));
 
+		terminal = new TerminalUI(scanner, 4);
 		char returned = terminal.getInputChar();
 
 		assertThat(returned).isEqualTo('a');
@@ -95,8 +97,9 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenSeveralCharsAreTyped() throws IOException {
-		System.setIn(new ByteArrayInputStream("abc".getBytes()));
-		terminal = new TerminalUI(System.in, 4);
+		scanner = new Scanner(new ByteArrayInputStream("abc".getBytes()));
+
+		terminal = new TerminalUI(scanner, 4);
 
 		char returned = terminal.getInputChar();
 
@@ -105,8 +108,9 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenNumberCharIsTyped() throws IOException {
-		System.setIn(new ByteArrayInputStream("1".getBytes()));
-		terminal = new TerminalUI(System.in, 4);
+		scanner = new Scanner(new ByteArrayInputStream("1".getBytes()));
+
+		terminal = new TerminalUI(scanner, 4);
 
 		char returned = terminal.getInputChar();
 
@@ -115,8 +119,9 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenSpecialCharIsTyped() throws IOException {
-		System.setIn(new ByteArrayInputStream("$".getBytes()));
-		terminal = new TerminalUI(System.in, 4);
+		scanner = new Scanner(new ByteArrayInputStream("$".getBytes()));
+
+		terminal = new TerminalUI(scanner, 4);
 
 		char returned = terminal.getInputChar();
 
@@ -125,18 +130,20 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenWhiteSpaceCharIsTyped() throws IOException {
-		System.setIn(new ByteArrayInputStream(" ".getBytes()));
-		terminal = new TerminalUI(System.in, 4);
+		scanner = new Scanner(new ByteArrayInputStream(" ".getBytes()));
+
+		terminal = new TerminalUI(scanner, 4);
 
 		char returned = terminal.getInputChar();
 
 		assertThat(returned).isEqualTo(' ');
 	}
-
+	
 	@Test
 	public void testGetInputCharWhenNoCharIsTyped() throws IOException {
-		System.setIn(new ByteArrayInputStream("".getBytes()));
-		terminal = new TerminalUI(System.in, 4);
+		scanner = new Scanner(new ByteArrayInputStream("".getBytes()));
+
+		terminal = new TerminalUI(scanner, 4);
 
 		char returned = terminal.getInputChar();
 
@@ -171,19 +178,22 @@ public class TestTerminalUI {
 
 		System.setOut(out);
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"));
+		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
 
+		assertThat(terminal.getMisses()).containsOnlyOnce('a');
 		verify(out).println("Char not present");
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenAlreadyTypedExceptionIsThrown() {
+		terminal.setMisses(Arrays.asList('e'));
 		PrintStream out = mock(PrintStream.class);
 
 		System.setOut(out);
 
-		terminal.printExceptionMessage(new IllegalCharException("Char already typed"));
+		terminal.printExceptionMessage(new IllegalCharException("Char already typed"), 'e');
 
+		assertThat(terminal.getMisses()).containsOnlyOnce('e');
 		verify(out).println("Char already typed");
 	}
 
@@ -193,57 +203,62 @@ public class TestTerminalUI {
 
 		System.setOut(out);
 
-		terminal.printExceptionMessage(new IllegalCharException("Char is not alphabetic"));
+		terminal.printExceptionMessage(new IllegalCharException("Char is not alphabetic"), '$');
 
+		assertThat(terminal.getMisses()).doesNotContain('$');
 		verify(out).println("Char is not alphabetic");
 	}
 
 	@Test
-	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrownForTheFirstTimeCausesErrorCounterIncrementing() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesErrorCounterIncrementing() {
 		terminal.setErrorCounter(0);
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"));
+		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
 
 		assertThat(terminal.getErrorCounter()).isOne();
 	}
 
 	@Test
-	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrownForMoreThanOneTimeCausesErrorCounterIncrementing() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForMoreThanOneTimeCausesErrorCounterIncrementing() {
 		terminal.setErrorCounter(1);
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"));
+		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
 
 		assertThat(terminal.getErrorCounter()).isEqualTo(2);
 	}
 	
 	@Test
-	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrownForTheFirstTimeCausesStickmanPrinting() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesStickmanAndMissesPrinting() {
 		PrintStream out = mock(PrintStream.class);
 		terminal.setErrorCounter(0);
 
 		System.setOut(out);
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"));
+		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
 
 		InOrder inOrder = inOrder(out);
 		inOrder.verify(out).println("Char not present");
 		inOrder.verify(out)
 				.println(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", "\n"));
+		inOrder.verify(out).println("MISSES: ");
+		inOrder.verify(out).println("[a]");
 	}
 	
 	@Test
-	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrownForForMoreThanOneTimeCausesStickmanPrinting() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForForMoreThanOneTimeCausesStickmanAndMissesPrinting() {
 		PrintStream out = mock(PrintStream.class);
 		terminal.setErrorCounter(1);
 
 		System.setOut(out);
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"));
+		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
 
 		InOrder inOrder = inOrder(out);
 		inOrder.verify(out).println("Char not present");
 		inOrder.verify(out)
 				.println(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", "\n"));
+		inOrder.verify(out).println("MISSES: ");
+		inOrder.verify(out).println("[a]");
 	}
 
 	@Test
