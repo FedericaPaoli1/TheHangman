@@ -58,7 +58,7 @@ public class TestMainBehaviour {
 
 		verify(executive).performCharControl('a');
 		assertThat(behaviour.getErrorCounter()).isOne();
-		verify(ui).printExceptionMessage(isA(CharAbsenceException.class));
+		verify(ui).printExceptionMessage(isA(CharAbsenceException.class), eq('a'));
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class TestMainBehaviour {
 		behaviour.executeControl(anyChar());
 
 		verify(executive).performCharControl(anyChar());
-		verify(ui).printExceptionMessage(isA(AlreadyTypedException.class));
+		verify(ui).printExceptionMessage(isA(AlreadyTypedException.class), anyChar());
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class TestMainBehaviour {
 		behaviour.executeControl(anyChar());
 
 		verify(executive).performCharControl(anyChar());
-		verify(ui).printExceptionMessage(isA(IllegalCharException.class));
+		verify(ui).printExceptionMessage(isA(IllegalCharException.class), anyChar());
 	}
 
 	@Test

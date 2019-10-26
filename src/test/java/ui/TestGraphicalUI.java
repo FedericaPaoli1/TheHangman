@@ -2,6 +2,8 @@ package ui;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.awt.GridBagLayout;
+
 import javax.swing.ImageIcon;
 
 import org.assertj.swing.annotation.GUITest;
@@ -32,6 +34,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 			return gui;
 		});
 		window = new FrameFixture(robot(), gui);
+		
 		window.show();
 	}
 
@@ -118,24 +121,30 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrown() {
 		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry..")));
+				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
 
+		window.textBox("missesTextBox").requireText(" " + 'a');
 		window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenAlreadyTypedExceptionIsThrown() {
+		window.textBox("missesTextBox").setText(" " + 'e');
+		
 		GuiActionRunner.execute(
-				() -> gui.printExceptionMessage(new AlreadyTypedException("Already typed char, please retry..")));
+				() -> gui.printExceptionMessage(new AlreadyTypedException("Already typed char, please retry.."), 'e'));
 
+		window.textBox("missesTextBox").requireText(" " + 'e');
 		window.label(JLabelMatcher.withText("Already typed char, please retry.."));
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenAlphabeticCharExceptionIsThrown() {
+		window.textBox("missesTextBox").setText(" " + 'e');
 		GuiActionRunner.execute(() -> gui.printExceptionMessage(
-				new AlreadyTypedException("The typed char is not alphabetic, please retry with an alphabetic one")));
+				new AlreadyTypedException("The typed char is not alphabetic, please retry with an alphabetic one"), '$'));
 
+		window.textBox("missesTextBox").requireText(" " + 'e');
 		window.label(JLabelMatcher.withText("The typed char is not alphabetic, please retry with an alphabetic one"));
 	}
 
@@ -144,7 +153,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		gui.setErrorCounter(0);
 
 		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry..")));
+				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
 
 		assertThat(gui.getErrorCounter()).isOne();
 	}
@@ -154,7 +163,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		gui.setErrorCounter(1);
 
 		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry..")));
+				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
 
 		assertThat(gui.getErrorCounter()).isEqualTo(2);
 	}
@@ -164,7 +173,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		gui.setErrorCounter(0);
 
 		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry..")));
+				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
 
 		assertThat(gui.getLblImage().getIcon().toString())
 				.isEqualTo(new ImageIcon(GraphicalUI.class.getResource("/images/error_1.png")).toString());
@@ -175,7 +184,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		gui.setErrorCounter(1);
 
 		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry..")));
+				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
 
 		assertThat(gui.getLblImage().getIcon().toString())
 				.isEqualTo(new ImageIcon(GraphicalUI.class.getResource("/images/error_2.png")).toString());

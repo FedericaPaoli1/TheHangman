@@ -28,9 +28,9 @@ public class MainBehaviour {
 			ui.printGuessingWord(guessingWord);
 		} catch (CharAbsenceException charAbs) {
 			errorCounter++;
-			ui.printExceptionMessage(charAbs);
+			ui.printExceptionMessage(charAbs, c);
 		} catch (IllegalCharException illChar) {
-			ui.printExceptionMessage(illChar);
+			ui.printExceptionMessage(illChar, c);
 		}
 	}
 
@@ -56,10 +56,10 @@ public class MainBehaviour {
 		return isCompleted || isLimitNumber;
 	}
 	
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		UserInterface terminal = new TerminalUI(System.in, 4);
 		MainExecutive exec = new MainExecutive("test", new StringManager("test"), new InputController("test"));
 		MainBehaviour behav = new MainBehaviour(exec, terminal);
 		behav.gameLoop();
-	}
+	}*/
 }

@@ -6,7 +6,7 @@ public interface UserInterface {
 
 	void isGameWon(boolean isWordCompleted);
 
-	void printExceptionMessage(Exception e);
+	void printExceptionMessage(Exception e, char wrongChar);
 	
 	void printGuessingWord(char[] guessingWord);
 }

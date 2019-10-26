@@ -17,6 +17,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -36,8 +38,8 @@ public class GraphicalUI extends JFrame implements UserInterface {
 	private JButton btnTry;
 	private JLabel lblMisses;
 	private JLabel lblGameResult;
-	private JLabel lblErrorMessage;
 	private int errorCounter;
+	private JLabel lblErrorMessage;
 
 	/**
 	 * Launch the application.
@@ -66,31 +68,12 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 440, 0, 0, 0 };
-		gbl_contentPane.rowHeights = new int[] { 0, 317, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				Double.MIN_VALUE };
+		gbl_contentPane.columnWidths = new int[] { 92, 180, 62, 0, 0, 40, 25, 12, 28, 0, 0, 0, 0, 0, 0, 240, 0 };
+		gbl_contentPane.rowHeights = new int[] { 17, 297, 0, 72, 49, 13, 39, 42, 39, 0 };
+		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
-
-		lblGameResult = new JLabel(" ");
-		lblGameResult.setName("gameResult");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 1;
-		gbc_lblNewLabel.gridy = 0;
-		contentPane.add(lblGameResult, gbc_lblNewLabel);
-
-		lblImage = new JLabel("");
-		lblImage.setName("image");
-		lblImage.setIcon(new ImageIcon(GraphicalUI.class.getResource("/images/start.png")));
-		GridBagConstraints gbc_lblImage = new GridBagConstraints();
-		gbc_lblImage.insets = new Insets(0, 0, 5, 5);
-		gbc_lblImage.anchor = GridBagConstraints.NORTH;
-		gbc_lblImage.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblImage.gridx = 0;
-		gbc_lblImage.gridy = 1;
-		contentPane.add(lblImage, gbc_lblImage);
 
 		charLabels = new JLabel[guessingWordLength];
 		for (int i = 0; i < charLabels.length; i++) {
@@ -101,9 +84,9 @@ public class GraphicalUI extends JFrame implements UserInterface {
 			lblChar.setBackground(new Color(255, 255, 255));
 			lblChar.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 			GridBagConstraints gbc_lblChar = new GridBagConstraints();
-			gbc_lblChar.insets = new Insets(0, 0, 5, i * 50);
-			gbc_lblChar.ipadx = 1;
-			gbc_lblChar.gridx = 0;
+			gbc_lblChar.anchor = GridBagConstraints.WEST;
+			gbc_lblChar.insets = new Insets(0, 0, 5, 5);
+			gbc_lblChar.gridx = 5 + i + 1;
 			gbc_lblChar.gridy = 2;
 			contentPane.add(lblChar, gbc_lblChar);
 			charLabels[i] = lblChar;
@@ -116,11 +99,34 @@ public class GraphicalUI extends JFrame implements UserInterface {
 			}
 		};
 
+		lblImage = new JLabel("");
+		lblImage.setName("image");
+		lblImage.setIcon(new ImageIcon(GraphicalUI.class.getResource("/images/start.png")));
+		GridBagConstraints gbc_lblImage = new GridBagConstraints();
+		gbc_lblImage.fill = GridBagConstraints.VERTICAL;
+		gbc_lblImage.gridwidth = 15;
+		gbc_lblImage.anchor = GridBagConstraints.WEST;
+		gbc_lblImage.insets = new Insets(0, 0, 5, 5);
+		gbc_lblImage.gridx = 0;
+		gbc_lblImage.gridy = 1;
+		contentPane.add(lblImage, gbc_lblImage);
+
+		lblGameResult = new JLabel(" ");
+		lblGameResult.setName("gameResult");
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.fill = GridBagConstraints.VERTICAL;
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel_1.gridx = 15;
+		gbc_lblNewLabel_1.gridy = 1;
+		contentPane.add(lblGameResult, gbc_lblNewLabel_1);
+
 		btnTry = new JButton("TRY");
+		btnTry.setFont(new Font("Dialog", Font.BOLD, 18));
 		btnTry.setEnabled(false);
 		GridBagConstraints gbc_btnTry = new GridBagConstraints();
+		gbc_btnTry.anchor = GridBagConstraints.EAST;
 		gbc_btnTry.insets = new Insets(0, 0, 5, 5);
-		gbc_btnTry.gridx = 0;
+		gbc_btnTry.gridx = 1;
 		gbc_btnTry.gridy = 4;
 		contentPane.add(btnTry, gbc_btnTry);
 
@@ -128,44 +134,47 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		charTextField.setName("charTextBox");
 		charTextField.setText(" ");
 		GridBagConstraints gbc_charTextField = new GridBagConstraints();
-		gbc_charTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_charTextField.anchor = GridBagConstraints.WEST;
+		gbc_charTextField.fill = GridBagConstraints.BOTH;
+		gbc_charTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_charTextField.gridx = 2;
-		gbc_charTextField.gridy = 5;
+		gbc_charTextField.gridy = 4;
 		contentPane.add(charTextField, gbc_charTextField);
 		charTextField.setColumns(10);
 		charTextField.addKeyListener(btnEnabler);
 
 		lblMisses = new JLabel("MISSES: ");
+		lblMisses.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblMisses.setName("misses");
 		GridBagConstraints gbc_lblMisses = new GridBagConstraints();
-		gbc_lblMisses.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblMisses.anchor = GridBagConstraints.SOUTH;
+		gbc_lblMisses.gridwidth = 2;
+		gbc_lblMisses.gridheight = 2;
+		gbc_lblMisses.anchor = GridBagConstraints.SOUTHEAST;
 		gbc_lblMisses.insets = new Insets(0, 0, 5, 5);
 		gbc_lblMisses.gridx = 0;
-		gbc_lblMisses.gridy = 7;
+		gbc_lblMisses.gridy = 5;
 		contentPane.add(lblMisses, gbc_lblMisses);
 
 		missesTextField = new JTextField();
 		missesTextField.setName("missesTextBox");
 		missesTextField.setEditable(false);
-		missesTextField.setText(" ");
+		missesTextField.setText("");
 		GridBagConstraints gbc_missesTextField = new GridBagConstraints();
-		gbc_missesTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_missesTextField.fill = GridBagConstraints.VERTICAL;
-		gbc_missesTextField.anchor = GridBagConstraints.WEST;
+		gbc_missesTextField.gridwidth = 2;
+		gbc_missesTextField.insets = new Insets(0, 0, 5, 5);
+		gbc_missesTextField.fill = GridBagConstraints.BOTH;
 		gbc_missesTextField.gridx = 2;
-		gbc_missesTextField.gridy = 8;
+		gbc_missesTextField.gridy = 6;
 		contentPane.add(missesTextField, gbc_missesTextField);
 		missesTextField.setColumns(10);
 
 		lblErrorMessage = new JLabel(" ");
 		lblErrorMessage.setName("errorMessage");
-		GridBagConstraints gbc_label = new GridBagConstraints();
-		gbc_label.insets = new Insets(0, 0, 0, 5);
-		gbc_label.gridx = 0;
-		gbc_label.gridy = 10;
-		contentPane.add(lblErrorMessage, gbc_label);
+		GridBagConstraints gbc_lblErrorMessage = new GridBagConstraints();
+		gbc_lblErrorMessage.insets = new Insets(0, 0, 5, 0);
+		gbc_lblErrorMessage.gridwidth = 16;
+		gbc_lblErrorMessage.gridx = 0;
+		gbc_lblErrorMessage.gridy = 7;
+		contentPane.add(lblErrorMessage, gbc_lblErrorMessage);
 
 	}
 
@@ -183,10 +192,11 @@ public class GraphicalUI extends JFrame implements UserInterface {
 	}
 
 	@Override
-	public void printExceptionMessage(Exception e) {
+	public void printExceptionMessage(Exception e, char wrongChar) {
 		lblErrorMessage.setText(e.getMessage());
 		if (e instanceof CharAbsenceException) {
 			this.errorCounter++;
+			missesTextField.setText(missesTextField.getText() + " " + wrongChar);
 			lblImage.setIcon(
 					new ImageIcon(GraphicalUI.class.getResource("/images/error_" + this.errorCounter + ".png")));
 		}
@@ -195,7 +205,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 	@Override
 	public void printGuessingWord(char[] guessingWord) {
 		for (int i = 0; i < guessingWord.length; i++) {
-			if(guessingWord[i] != '_') 
+			if (guessingWord[i] != '_')
 				charLabels[i].setText(("" + guessingWord[i]).toUpperCase());
 		}
 	}

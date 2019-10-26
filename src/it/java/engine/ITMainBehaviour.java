@@ -1,6 +1,7 @@
 package engine;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyChar;
@@ -51,14 +52,14 @@ public class ITMainBehaviour {
 		behaviour.executeControl('a');
 
 		assertThat(behaviour.getErrorCounter()).isOne();
-		verify(ui).printExceptionMessage(isA(CharAbsenceException.class));
+		verify(ui).printExceptionMessage(isA(CharAbsenceException.class), eq('a'));
 	}
 
 	@Test
 	public void testExecuteControlThrowsIllegalCharException() throws Exception {
-		behaviour.executeControl(anyChar());
+		behaviour.executeControl(eq(anyChar()));
 
-		verify(ui).printExceptionMessage(isA(IllegalCharException.class));
+		verify(ui).printExceptionMessage(isA(IllegalCharException.class), anyChar());
 	}
 	
 	//
