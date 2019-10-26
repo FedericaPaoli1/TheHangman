@@ -2,8 +2,6 @@ package ui;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.awt.GridBagLayout;
-
 import javax.swing.ImageIcon;
 
 import org.assertj.swing.annotation.GUITest;
@@ -34,7 +32,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 			return gui;
 		});
 		window = new FrameFixture(robot(), gui);
-		
+
 		window.show();
 	}
 
@@ -130,7 +128,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testPrintExceptionMessageWhenAlreadyTypedExceptionIsThrown() {
 		window.textBox("missesTextBox").setText(" " + 'e');
-		
+
 		GuiActionRunner.execute(
 				() -> gui.printExceptionMessage(new AlreadyTypedException("Already typed char, please retry.."), 'e'));
 
@@ -142,7 +140,8 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	public void testPrintExceptionMessageWhenAlphabeticCharExceptionIsThrown() {
 		window.textBox("missesTextBox").setText(" " + 'e');
 		GuiActionRunner.execute(() -> gui.printExceptionMessage(
-				new AlreadyTypedException("The typed char is not alphabetic, please retry with an alphabetic one"), '$'));
+				new AlreadyTypedException("The typed char is not alphabetic, please retry with an alphabetic one"),
+				'$'));
 
 		window.textBox("missesTextBox").requireText(" " + 'e');
 		window.label(JLabelMatcher.withText("The typed char is not alphabetic, please retry with an alphabetic one"));
@@ -172,24 +171,21 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeChangeImage() {
 		gui.setErrorCounter(0);
 
-		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
+		gui.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a');
 
-		assertThat(gui.getLblImage().getIcon().toString())
+		assertThat(window.label("image").target().getIcon().toString())
 				.isEqualTo(new ImageIcon(GraphicalUI.class.getResource("/images/error_1.png")).toString());
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForForMoreThanOneTimeChangeImage() {
 		gui.setErrorCounter(1);
+		gui.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a');
 
-		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
-
-		assertThat(gui.getLblImage().getIcon().toString())
+		assertThat(window.label("image").target().getIcon().toString())
 				.isEqualTo(new ImageIcon(GraphicalUI.class.getResource("/images/error_2.png")).toString());
 	}
-	
+
 	@Test
 	public void testPrintGuessingWordWhenNoInputCharIsCorrect() {
 		char[] guessingWord = new char[] { '_', '_', '_', '_' };
@@ -199,26 +195,63 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(" ");
 		}
 	}
-	
+
 	@Test
 	public void testPrintGuessingWordWhenAnInputCharIsCorrect() {
 		char[] guessingWord = new char[] { '_', 'e', '_', '_' };
 		GuiActionRunner.execute(() -> gui.printGuessingWord(guessingWord));
-		
+
 		window.label(JLabelMatcher.withName("finalWordChar" + 1)).requireText("e".toUpperCase());
 
-		for (int i = 0 ; i < GUESSING_WORD_LENGTH && i!= 1; i++) {
+		for (int i = 0; i < GUESSING_WORD_LENGTH && i != 1; i++) {
 			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(" ");
+		}
+	}
+
+	@Test
+	public void testPrintGuessingWordWhenFinalWordIsCompleted() {
+		char[] guessingWord = new char[] { 't', 'e', 's', 't' };
+		gui.printGuessingWord(guessingWord);
+
+		for (int i = 0; i < GUESSING_WORD_LENGTH; i++) {
+			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(("" + guessingWord[i]).toUpperCase());
 		}
 	}
 	
 	@Test
-	public void testPrintGuessingWordWhenFinalWordIsCompleted() {
-		char[] guessingWord = new char[] { 't', 'e', 's', 't' };
-		GuiActionRunner.execute(() -> gui.printGuessingWord(guessingWord));
+	@GUITest
+	public void testClickButtonTryClearsErrorMessageWhenCharIsCorrect() {
+		GuiActionRunner.execute(() -> window.label("errorMessage").target().setText("Error"));
+		window.textBox("charTextBox").enterText("e");
+		window.button(JButtonMatcher.withText("TRY")).click();
 
-		for (int i = 0 ; i < GUESSING_WORD_LENGTH; i++) {
-			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(("" + guessingWord[i]).toUpperCase());
-		}
+		window.label("errorMessage").requireText(" ");
+	}
+	
+	@Test
+	@GUITest
+	public void testButtonTryClearInsertLabelWhenPressed() {
+		window.textBox("charTextBox").enterText("e");
+		window.button(JButtonMatcher.withText("TRY")).click();
+		
+		window.textBox("charTextBox").requireText("");
+	}
+	
+	@Test
+	@GUITest
+	public void testClickButtonTryInsertsCharInTheQueueWhenCharInPresent() {
+		window.textBox("charTextBox").enterText("e");
+		window.button(JButtonMatcher.withText("TRY")).click();
+		
+		assertThat(gui.getQueue()).contains('e');
+	}
+	
+	@Test
+	@GUITest
+	public void testClickButtonTryLeaveQueueUnchangedWhenCharIsNotInserted() {
+		gui.getQueue().clear();
+		window.button(JButtonMatcher.withText("TRY")).click();
+		
+		assertThat(gui.getQueue()).isEmpty();
 	}
 }
