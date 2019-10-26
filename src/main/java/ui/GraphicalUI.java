@@ -8,6 +8,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import engine.InputController;
+import engine.MainBehaviour;
+import engine.MainExecutive;
+import engine.StringManager;
 import exceptions.CharAbsenceException;
 
 import javax.swing.JLabel;
@@ -17,11 +21,13 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 import java.awt.Color;
 
 public class GraphicalUI extends JFrame implements UserInterface {
@@ -40,6 +46,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 	private JLabel lblGameResult;
 	private int errorCounter;
 	private JLabel lblErrorMessage;
+	private BlockingQueue<Character> queue = new ArrayBlockingQueue<Character>(1);
 
 	/**
 	 * Launch the application.
@@ -68,7 +75,8 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 92, 180, 62, 0, 0, 40, 25, 12, 28, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_contentPane.columnWidths = new int[] { 92, 180, 62, 0, 0, 40, 25, 12, 28, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0 };
 		gbl_contentPane.rowHeights = new int[] { 17, 297, 0, 72, 49, 13, 39, 42, 39, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
@@ -130,6 +138,13 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		gbc_btnTry.gridx = 1;
 		gbc_btnTry.gridy = 4;
 		contentPane.add(btnTry, gbc_btnTry);
+		btnTry.addActionListener(e -> {
+			if (btnTry.isEnabled()) {
+				queue.offer(Character.toLowerCase(charTextField.getText().trim().charAt(0)));
+				this.lblErrorMessage.setText(" ");
+				this.charTextField.setText("");
+			}
+		});
 
 		charTextField = new JTextField();
 		charTextField.setName("charTextBox");
@@ -181,34 +196,50 @@ public class GraphicalUI extends JFrame implements UserInterface {
 
 	@Override
 	public char getInputChar() {
-		return Character.toLowerCase(charTextField.getText().trim().charAt(0));
+		return takeElementFromQueue();
+	}
+
+	private char takeElementFromQueue() {
+		char c = ' ';
+		try {
+			c = queue.take();
+		} catch (InterruptedException e) {
+		}
+		return c;
 	}
 
 	@Override
 	public void isGameWon(boolean isWordCompleted) {
 		if (!isWordCompleted)
-			lblGameResult.setText("OH NO! You've finished your remaining attempts =(");
+			SwingUtilities
+					.invokeLater(() -> lblGameResult.setText("OH NO! You've finished your remaining attempts =("));
 		else
-			lblGameResult.setText("Congratulations! YOU WON =)");
+			SwingUtilities.invokeLater(() -> lblGameResult.setText("Congratulations! YOU WON =)"));
 	}
 
 	@Override
 	public void printExceptionMessage(Exception e, char wrongChar) {
-		lblErrorMessage.setText(e.getMessage());
+		SwingUtilities.invokeLater(() -> lblErrorMessage.setText(e.getMessage()));
 		if (e instanceof CharAbsenceException) {
 			this.errorCounter++;
-			missesTextField.setText(missesTextField.getText() + " " + wrongChar);
-			lblImage.setIcon(
-					new ImageIcon(GraphicalUI.class.getResource("/images/error_" + this.errorCounter + ".png")));
+			SwingUtilities.invokeLater(() -> {
+				missesTextField.setText(missesTextField.getText() + " " + wrongChar);
+			});
+			SwingUtilities.invokeLater(() -> {
+				lblImage.setIcon(
+						new ImageIcon(GraphicalUI.class.getResource("/images/error_" + this.errorCounter + ".png")));
+			});
 		}
 	}
 
 	@Override
 	public void printGuessingWord(char[] guessingWord) {
-		for (int i = 0; i < guessingWord.length; i++) {
-			if (guessingWord[i] != '_')
-				charLabels[i].setText(("" + guessingWord[i]).toUpperCase());
-		}
+		SwingUtilities.invokeLater(() -> {
+			for (int i = 0; i < guessingWord.length; i++) {
+				if (guessingWord[i] != '_')
+					charLabels[i].setText(("" + guessingWord[i]).toUpperCase());
+			}
+		});
 	}
 
 	int getErrorCounter() {
@@ -221,5 +252,9 @@ public class GraphicalUI extends JFrame implements UserInterface {
 
 	JLabel getLblImage() {
 		return this.lblImage;
+	}
+
+	BlockingQueue<Character> getQueue() {
+		return this.queue;
 	}
 }
