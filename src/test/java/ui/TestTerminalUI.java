@@ -228,7 +228,7 @@ public class TestTerminalUI {
 	}
 	
 	@Test
-	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesStickmanPrinting() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesStickmanAndMissesPrinting() {
 		PrintStream out = mock(PrintStream.class);
 		terminal.setErrorCounter(0);
 
@@ -240,10 +240,12 @@ public class TestTerminalUI {
 		inOrder.verify(out).println("Char not present");
 		inOrder.verify(out)
 				.println(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", "\n"));
+		inOrder.verify(out).println("MISSES: ");
+		inOrder.verify(out).println("[a]");
 	}
 	
 	@Test
-	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForForMoreThanOneTimeCausesStickmanPrinting() {
+	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForForMoreThanOneTimeCausesStickmanAndMissesPrinting() {
 		PrintStream out = mock(PrintStream.class);
 		terminal.setErrorCounter(1);
 
@@ -255,6 +257,8 @@ public class TestTerminalUI {
 		inOrder.verify(out).println("Char not present");
 		inOrder.verify(out)
 				.println(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", "\n"));
+		inOrder.verify(out).println("MISSES: ");
+		inOrder.verify(out).println("[a]");
 	}
 
 	@Test
