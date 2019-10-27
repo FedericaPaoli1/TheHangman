@@ -29,7 +29,7 @@ public class TerminalUI implements UserInterface {
 	public char getInputChar() {
 		System.out.print("Insert a char: ");
 		char c = (this.scanner.hasNext()) ? this.scanner.next().charAt(0) : ' ';
-		return c;
+		return Character.toLowerCase(c);
 	}
 
 	@Override

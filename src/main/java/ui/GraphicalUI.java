@@ -8,10 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import engine.InputController;
-import engine.MainBehaviour;
-import engine.MainExecutive;
-import engine.StringManager;
 import exceptions.CharAbsenceException;
 
 import javax.swing.JLabel;
@@ -76,7 +72,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 92, 180, 62, 0, 0, 40, 25, 12, 28, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0,
+		gbl_contentPane.columnWidths = new int[] { 92, 180, 62, 62, 0, 40, 25, 12, 28, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0 };
 		gbl_contentPane.rowHeights = new int[] { 17, 297, 0, 72, 49, 13, 39, 42, 39, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -141,7 +137,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.add(btnTry, gbc_btnTry);
 		btnTry.addActionListener(e -> {
 			if (btnTry.isEnabled()) {
-				queue.offer(charTextField.getText().trim().charAt(0));
+				queue.offer(charTextField.getText().toLowerCase().trim().charAt(0));
 				this.lblErrorMessage.setText(" ");
 				this.charTextField.setText("");
 			}
