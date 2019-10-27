@@ -56,7 +56,7 @@ public class TerminalUI implements UserInterface {
 		System.out.println(Arrays.toString(guessingWord).toUpperCase().replace("[", "").replace("]", "").replace(", ", " "));
 	}
 
-	public void printStatus(int figureIndex) {
+	private void printStatus(int figureIndex) {
 		System.out.println(
 				Arrays.toString(Stickman.FIGURES[figureIndex]).replace("[", "").replace("]", "").replace(", ", "\n"));
 		System.out.println("MISSES: ");
