@@ -33,7 +33,8 @@ public class ITWordMySQLRepository {
 		conf = new Configuration().configure()
 				.setProperty("hibernate.connection.url", mysql.getJdbcUrl() + "?useSSL=false")
 				.setProperty("hibernate.connection.username", mysql.getUsername())
-				.setProperty("hibernate.connection.password", mysql.getPassword());
+				.setProperty("hibernate.connection.password", mysql.getPassword())
+				.setProperty("javax.persistence.sql-load-script-source", "src/e2e/resources/testLoad.sql");
 	}
 
 	@Before

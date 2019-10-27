@@ -6,9 +6,6 @@ import ui.UserInterface;
 
 public class MainBehaviour {
 
-	/*
-	 * test visibility
-	 */
 	static final int MAX_ERROR_NUMBER = 6;
 
 	private MainExecutive executive;

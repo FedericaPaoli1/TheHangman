@@ -141,7 +141,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.add(btnTry, gbc_btnTry);
 		btnTry.addActionListener(e -> {
 			if (btnTry.isEnabled()) {
-				queue.offer(Character.toLowerCase(charTextField.getText().trim().charAt(0)));
+				queue.offer(charTextField.getText().trim().charAt(0));
 				this.lblErrorMessage.setText(" ");
 				this.charTextField.setText("");
 			}
@@ -225,7 +225,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		if (e instanceof CharAbsenceException) {
 			this.errorCounter++;
 			SwingUtilities.invokeLater(() -> {
-				missesTextField.setText(missesTextField.getText() + " " + wrongChar);
+				missesTextField.setText((missesTextField.getText() + " " + Character.toUpperCase(wrongChar)));
 			});
 			SwingUtilities.invokeLater(() -> {
 				lblImage.setIcon(
@@ -239,7 +239,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		SwingUtilities.invokeLater(() -> {
 			for (int i = 0; i < guessingWord.length; i++) {
 				if (guessingWord[i] != '_')
-					charLabels[i].setText(("" + guessingWord[i]).toUpperCase());
+					charLabels[i].setText("" + Character.toUpperCase(guessingWord[i]));
 			}
 		});
 	}

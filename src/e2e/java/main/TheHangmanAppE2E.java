@@ -87,8 +87,8 @@ public class TheHangmanAppE2E extends AssertJSwingJUnitTestCase {
 		for (int i = 0; i < 4; i++) {
 			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(" ");
 		}
-		window.textBox("missesTextBox").requireText(" " + 'a');
-		window.label(JLabelMatcher.withText("Char not present"));
+		window.textBox("missesTextBox").requireText(" " + 'A');
+		window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
 	}
 	
 	@Test @GUITest
@@ -105,8 +105,8 @@ public class TheHangmanAppE2E extends AssertJSwingJUnitTestCase {
 		String[] inputs = {"a", "b", "c", "d", "f", "g"};
 		for (int i = 0; i < inputs.length; i++) {
 			setInputAndClick(inputs[i]);
-			window.textBox("missesTextBox").requireText(".*" + inputs[i]);
-			window.label(JLabelMatcher.withText("Char not present"));
+			window.textBox("missesTextBox").requireText(".*" + inputs[i].toUpperCase());
+			window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
 		}
 	}
 

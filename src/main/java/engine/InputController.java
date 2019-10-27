@@ -16,15 +16,16 @@ public class InputController {
 	}
 
 	public boolean isPresent(char c) {
-			return finalWord.indexOf(c) >= 0;
+		return finalWord.indexOf(c) >= 0;
 	}
 
-	public boolean isAlreadyTyped(char c) throws NotAlphabeticCharException{
+	public boolean isAlreadyTyped(char c) throws NotAlphabeticCharException {
 		if (!Character.isAlphabetic(c))
-			throw new NotAlphabeticCharException("Char is not alphabetic");
+			throw new NotAlphabeticCharException(
+					"The typed char is not alphabetic, please retry with an alphabetic one.");
 		if (alreadyTyped.contains(c))
 			return true;
-	
+
 		this.alreadyTyped.add(c);
 		return false;
 	}
@@ -32,5 +33,5 @@ public class InputController {
 	void setAlreadyTyped(Collection<Character> alreadyTyped) {
 		this.alreadyTyped = alreadyTyped;
 	}
-	
+
 }

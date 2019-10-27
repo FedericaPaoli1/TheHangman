@@ -1,4 +1,5 @@
 package repository;
+
 import static org.assertj.core.api.Assertions.*;
 
 import org.hibernate.cfg.Configuration;
@@ -12,6 +13,7 @@ public class TestConfigurationBuilder {
 	private static final String USERNAME = "name";
 	private static final String PASSWORD = "test";
 	private static final String PORT = "000";
+	private static final boolean IS_TEST_MODE = true;
 	private ConfigurationBuilder builder;
 
 	@Before
@@ -21,15 +23,15 @@ public class TestConfigurationBuilder {
 
 	@Test
 	public void testBuildSetsAllParameters() {
-		builder.withExposedPort(PORT)
-			.withPassword(PASSWORD)
-			.withUsername(USERNAME);
+		builder.withExposedPort(PORT).withPassword(PASSWORD).withUsername(USERNAME).withRunningMode(IS_TEST_MODE);
 
 		Configuration conf = builder.build();
 
 		assertThat(conf.getProperty("hibernate.connection.username")).isEqualTo(USERNAME);
 		assertThat(conf.getProperty("hibernate.connection.password")).isEqualTo(PASSWORD);
 		assertThat(conf.getProperty("hibernate.connection.url")).containsPattern(".*" + PORT + ".*");
+		assertThat(conf.getProperty("javax.persistence.sql-load-script-source"))
+				.isEqualTo("src/e2e/resources/testLoad.sql");
 	}
 
 }

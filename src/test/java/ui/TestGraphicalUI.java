@@ -121,30 +121,30 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(() -> gui
 				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
 
-		window.textBox("missesTextBox").requireText(" " + 'a');
+		window.textBox("missesTextBox").requireText(" " + 'A');
 		window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenAlreadyTypedExceptionIsThrown() {
-		window.textBox("missesTextBox").setText(" " + 'e');
+		window.textBox("missesTextBox").setText(" " + Character.toUpperCase('e'));
 
 		GuiActionRunner.execute(
 				() -> gui.printExceptionMessage(new AlreadyTypedException("Already typed char, please retry.."), 'e'));
 
-		window.textBox("missesTextBox").requireText(" " + 'e');
+		window.textBox("missesTextBox").requireText(" " + 'E');
 		window.label(JLabelMatcher.withText("Already typed char, please retry.."));
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenAlphabeticCharExceptionIsThrown() {
-		window.textBox("missesTextBox").setText(" " + 'e');
+		window.textBox("missesTextBox").setText(" " + Character.toUpperCase('e'));
 		GuiActionRunner.execute(() -> gui.printExceptionMessage(
-				new AlreadyTypedException("The typed char is not alphabetic, please retry with an alphabetic one"),
+				new AlreadyTypedException("The typed char is not alphabetic, please retry with an alphabetic one."),
 				'$'));
 
-		window.textBox("missesTextBox").requireText(" " + 'e');
-		window.label(JLabelMatcher.withText("The typed char is not alphabetic, please retry with an alphabetic one"));
+		window.textBox("missesTextBox").requireText(" " + 'E');
+		window.label(JLabelMatcher.withText("The typed char is not alphabetic, please retry with an alphabetic one."));
 	}
 
 	@Test
@@ -230,7 +230,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	
 	@Test
 	@GUITest
-	public void testButtonTryClearInsertLabelWhenPressed() {
+	public void testButtonTryClearInsertLabelWhenClicked() {
 		window.textBox("charTextBox").enterText("e");
 		window.button(JButtonMatcher.withText("TRY")).click();
 		

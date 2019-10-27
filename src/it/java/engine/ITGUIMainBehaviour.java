@@ -41,13 +41,13 @@ public class ITGUIMainBehaviour extends AssertJSwingJUnitTestCase {
 	public void testWhenCharIsWrong() {
 		bh.executeControl('a');
 
-		window.label("errorMessage").requireText("Char not present");
-		window.textBox("missesTextBox").requireText(" a");
+		window.label("errorMessage").requireText("The typed char is not present, please retry..");
+		window.textBox("missesTextBox").requireText(" A");
 
 		bh.executeControl('$');
 
-		window.label("errorMessage").requireText("Char is not alphabetic");
-		window.textBox("missesTextBox").requireText(" a"); //unchanged
+		window.label("errorMessage").requireText("The typed char is not alphabetic, please retry with an alphabetic one.");
+		window.textBox("missesTextBox").requireText(" A"); //unchanged
 	}
 
 	@Test

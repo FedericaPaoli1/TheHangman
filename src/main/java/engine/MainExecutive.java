@@ -20,12 +20,12 @@ public class MainExecutive {
 	public char[] performCharControl(char c) throws CharAbsenceException, AlreadyTypedException, IllegalCharException {
 		try {
 			if (controller.isAlreadyTyped(c))
-				throw new AlreadyTypedException("Char already typed");
+				throw new AlreadyTypedException("Already typed char, please retry..");
 		} catch (NotAlphabeticCharException notAlph) {
 			throw notAlph;
 		}
 		if (!controller.isPresent(c))
-			throw new CharAbsenceException("Char not present");
+			throw new CharAbsenceException("The typed char is not present, please retry..");
 		manager.updateGuessedWord(c);
 		return manager.getGuessingWord();
 	}
