@@ -101,6 +101,15 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 
 		assertThat(gui.getInputChar()).isEqualTo('a');
 	}
+	
+	@Test
+	public void testGetInputCharWhenIllegalStateExceptionIsThrown() {
+		gui.getQueue().clear();
+		
+		Thread.currentThread().interrupt();
+		
+		assertThatThrownBy(() -> gui.getInputChar()).isInstanceOf(IllegalStateException.class);
+	}
 
 	@Test
 	public void testIsGameWonWhenIsTrue() {
