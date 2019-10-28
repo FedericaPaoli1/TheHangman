@@ -10,6 +10,9 @@ import graphics.Stickman;
 
 public class TerminalUI implements UserInterface {
 
+	public static final String WINNING_MESSAGE = "Congratulations!\nYOU WON =)\n--------GAME OVER--------";
+	public static final String LOOSING_MESSAGE = "OH NO!\nYou've finished your remaining attempts =(\n--------GAME OVER--------";
+	
 	private Scanner scanner;
 	private int errorCounter;
 	private List<Character> misses;
@@ -35,9 +38,9 @@ public class TerminalUI implements UserInterface {
 	@Override
 	public void isGameWon(boolean isWordCompleted) {
 		if (!isWordCompleted)
-			System.out.println("OH NO!\nYou've finished your remaining attempts =(\n--------GAME OVER--------");
+			System.out.println(LOOSING_MESSAGE);
 		else
-			System.out.println("Congratulations!\nYOU WON =)\n--------GAME OVER--------");
+			System.out.println(WINNING_MESSAGE);
 
 	}
 
