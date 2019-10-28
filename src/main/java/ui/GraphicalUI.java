@@ -248,10 +248,6 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		this.errorCounter = i;
 	}
 
-	JLabel getLblImage() {
-		return this.lblImage;
-	}
-
 	BlockingQueue<Character> getQueue() {
 		return this.queue;
 	}
