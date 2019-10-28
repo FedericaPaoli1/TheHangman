@@ -85,7 +85,7 @@ public class TheHangmanApp implements Callable<Void> {
 	
 	private static Configuration loadTestScript(boolean isTest, Configuration conf) {
 		if (isTest)
-			conf.setProperty("javax.persistence.sql-load-script-source", "src/e2e/resources/testLoad.sql");
+			conf.setProperty("javax.persistence.sql-load-script-source", "src/test/resources/testLoad.sql");
 		return conf;
 	}
 
