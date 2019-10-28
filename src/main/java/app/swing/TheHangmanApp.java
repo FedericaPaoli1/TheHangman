@@ -17,7 +17,6 @@ import repository.ConfigurationBuilder;
 import repository.WordMySQLRepository;
 import ui.GraphicalUI;
 import ui.TerminalUI;
-import ui.UserInterface;
 
 @Command(mixinStandardHelpOptions = true)
 public class TheHangmanApp implements Callable<Void> {
@@ -30,14 +29,14 @@ public class TheHangmanApp implements Callable<Void> {
 
 	@Option(names = { "--mysql-password" }, description = "mysql password")
 	private String mysqlPassword = "root";
-	
+
 	@Option(names = { "--db-name" }, description = "database name")
 	private String databaseName = "HangmanDB";
-	
-	@Option(names = { "mode" }, description = "game mode")
-	private String mode = "graphical";
 
-	@Option(names = "-t" )
+	@Option(names = { "mode" }, description = "game mode")
+	private String mode = "terminal";
+
+	@Option(names = "-t")
 	private boolean isTestMode;
 
 	public static void main(String[] args) {
@@ -46,43 +45,54 @@ public class TheHangmanApp implements Callable<Void> {
 
 	@Override
 	public Void call() throws Exception {
-		EventQueue.invokeLater(() -> {
-			try {
-				Configuration conf = new ConfigurationBuilder()
-						.withUsername(this.mysqlUsername)
-						.withPassword(this.mysqlPassword)
-						.withExposedPort("" + this.mysqlPort)
-						.withDatabaseName(this.databaseName)
-						.build();
-				loadTestScript(isTestMode, conf);
-				WordMySQLRepository repository = new WordMySQLRepository(conf.buildSessionFactory());
-				String finalWord = repository.getRandomWord();
-				UserInterface ui = chooseUserInterface(this.mode, finalWord.length());
-				MainBehaviour behaviour = new MainBehaviour(
-						new MainExecutive(finalWord, 
-								new StringManager(finalWord), 
-								new InputController(finalWord)), 
-						ui);
-				new Thread(() -> behaviour.gameLoop()).start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		try {
+			Configuration conf = new ConfigurationBuilder()
+					.withUsername(this.mysqlUsername)
+					.withPassword(this.mysqlPassword)
+					.withExposedPort("" + this.mysqlPort)
+					.withDatabaseName(this.databaseName)
+					.build();
+			loadTestScript(isTestMode, conf);
+
+			WordMySQLRepository repository = new WordMySQLRepository(conf.buildSessionFactory());
+			String finalWord = repository.getRandomWord();
+			
+			setupGraphicsAndStartGameLoop(mode, finalWord);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
-	private static UserInterface chooseUserInterface(String mode, int finalWordLength) {
-		if (mode.equals("graphical")) {
-			GraphicalUI gui = new GraphicalUI(finalWordLength);
-			gui.setVisible(true);
-			return gui;
+	private static void setupGraphicsAndStartGameLoop(String mode, String finalWord) {
+		if (mode.equals("graphical")) 
+		{
+			EventQueue.invokeLater(() -> {
+				GraphicalUI gui = new GraphicalUI(finalWord.length());
+				gui.setVisible(true);
+				MainBehaviour behaviour = new MainBehaviour(
+						new MainExecutive(
+								finalWord, 
+								new StringManager(finalWord), 
+								new InputController(finalWord)),
+						gui);
+				new Thread(() -> behaviour.gameLoop()).start();
+			});
+		} 
+		else if (mode.equals("terminal")) 
+		{
+			TerminalUI ui = new TerminalUI(new Scanner(System.in), finalWord.length());
+			MainBehaviour behaviour = new MainBehaviour(
+				new MainExecutive(
+						finalWord, 
+						new StringManager(finalWord), 
+						new InputController(finalWord)),
+				ui);
+			behaviour.gameLoop();
 		}
-		else if (mode.equals("terminal"))
-			return new TerminalUI(new Scanner(System.in), finalWordLength);
-		else 
-			throw new IllegalArgumentException();
 	}
-	
+
 	private static Configuration loadTestScript(boolean isTest, Configuration conf) {
 		if (isTest)
 			conf.setProperty("javax.persistence.sql-load-script-source", "src/test/resources/testLoad.sql");
