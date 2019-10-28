@@ -12,8 +12,8 @@
 			org.hibernate.context.internal.ThreadLocalSessionContext
 		</property>
 
-		<!-- initial load script fetch -->
-		<property name="javax.persistence.sql-load-script-source">src/main/resources/load.sql</property>
+		<!-- initial load script fetch
+		<property name="javax.persistence.sql-load-script-source">src/main/resources/load.sql</property> -->
 
 		<!-- For SSL warnings -->
 		<property name="hibernate.connection.requireSSL">false</property>

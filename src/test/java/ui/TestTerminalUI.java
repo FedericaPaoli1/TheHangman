@@ -241,7 +241,7 @@ public class TestTerminalUI {
 		inOrder.verify(out)
 				.println(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", "\n"));
 		inOrder.verify(out).println("MISSES: ");
-		inOrder.verify(out).println("[a]");
+		inOrder.verify(out).println("[A]");
 	}
 	
 	@Test
@@ -258,7 +258,7 @@ public class TestTerminalUI {
 		inOrder.verify(out)
 				.println(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", "\n"));
 		inOrder.verify(out).println("MISSES: ");
-		inOrder.verify(out).println("[a]");
+		inOrder.verify(out).println("[A]");
 	}
 
 	@Test
@@ -269,7 +269,7 @@ public class TestTerminalUI {
 
 		terminal.printGuessingWord(new char[] { 't', 'e', 's', 't' });
 
-		verify(out).println("t e s t");
+		verify(out).println("T E S T");
 	}
 
 	@Test
@@ -280,7 +280,7 @@ public class TestTerminalUI {
 
 		terminal.printGuessingWord(new char[] { '_', 'e', '_', '_' });
 
-		verify(out).println("_ e _ _");
+		verify(out).println("_ E _ _");
 	}
 
 	@Test

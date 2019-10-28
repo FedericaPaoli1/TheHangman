@@ -1,11 +1,9 @@
 package ui;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.IntPredicate;
 
 import exceptions.CharAbsenceException;
 import graphics.Stickman;
@@ -31,7 +29,7 @@ public class TerminalUI implements UserInterface {
 	public char getInputChar() {
 		System.out.print("Insert a char: ");
 		char c = (this.scanner.hasNext()) ? this.scanner.next().charAt(0) : ' ';
-		return c;
+		return Character.toLowerCase(c);
 	}
 
 	@Override
@@ -55,14 +53,14 @@ public class TerminalUI implements UserInterface {
 
 	@Override
 	public void printGuessingWord(char[] guessingWord) {
-		System.out.println(Arrays.toString(guessingWord).replace("[", "").replace("]", "").replace(", ", " "));
+		System.out.println(Arrays.toString(guessingWord).toUpperCase().replace("[", "").replace("]", "").replace(", ", " "));
 	}
 
 	public void printStatus(int figureIndex) {
 		System.out.println(
 				Arrays.toString(Stickman.FIGURES[figureIndex]).replace("[", "").replace("]", "").replace(", ", "\n"));
 		System.out.println("MISSES: ");
-		System.out.println(Arrays.toString(misses.toArray()));
+		System.out.println(Arrays.toString(misses.toArray()).toUpperCase());
 	}
 
 	public int getErrorCounter() {
