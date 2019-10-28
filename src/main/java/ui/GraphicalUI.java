@@ -136,12 +136,10 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		gbc_btnTry.gridy = 4;
 		contentPane.add(btnTry, gbc_btnTry);
 		btnTry.addActionListener(e -> {
-			if (btnTry.isEnabled()) {
 				queue.offer(charTextField.getText().toLowerCase().trim().charAt(0));
 				this.lblErrorMessage.setText(" ");
 				this.charTextField.setText("");
-				btnTry.setEnabled(false);
-			}
+				this.btnTry.setEnabled(false);
 		});
 
 		charTextField = new JTextField();
@@ -203,6 +201,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		try {
 			c = queue.take();
 		} catch (InterruptedException e) {
+			throw new IllegalStateException(e);
 		}
 		return c;
 	}
