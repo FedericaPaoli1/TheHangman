@@ -50,18 +50,21 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
+	@GUITest
 	public void testWhenCharIsTypedThenTryButtonShouldBeEnabled() {
 		window.textBox("charTextBox").enterText("e");
 		window.button(JButtonMatcher.withText("TRY")).requireEnabled();
 	}
 
 	@Test
+	@GUITest
 	public void testWhenWhiteSpacesAreTypedThenTryButtonShouldBeDisabled() {
 		window.textBox("charTextBox").enterText("   ");
 		window.button(JButtonMatcher.withText("TRY")).requireDisabled();
 	}
 
 	@Test
+	@GUITest
 	public void testWhenWhiteSpacesAreFollowedByACharThenTryButtonShouldBeEnabled() {
 		window.textBox("charTextBox").enterText("   c");
 		window.button(JButtonMatcher.withText("TRY")).requireEnabled();
@@ -103,34 +106,36 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
+	@GUITest
 	public void testIsGameWonWhenIsTrue() {
-		GuiActionRunner.execute(() -> gui.isGameWon(true));
+		gui.isGameWon(true);
 
 		window.label(JLabelMatcher.withText("Congratulations! YOU WON =)"));
 	}
 
 	@Test
 	public void testIsGameWonWhenIsFalse() {
-		GuiActionRunner.execute(() -> gui.isGameWon(false));
+		gui.isGameWon(false);
 
 		window.label(JLabelMatcher.withText("OH NO! You've finished your remaining attempts =("));
 	}
 
 	@Test
+	@GUITest
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrown() {
-		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
+		gui.printExceptionMessage(
+				new CharAbsenceException("The typed char is not present, please retry.."), 'a');
 
 		window.textBox("missesTextBox").requireText(" " + 'A');
 		window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
 	}
 
 	@Test
+	@GUITest
 	public void testPrintExceptionMessageWhenAlreadyTypedExceptionIsThrown() {
 		window.textBox("missesTextBox").setText(" " + Character.toUpperCase('e'));
 
-		GuiActionRunner.execute(
-				() -> gui.printExceptionMessage(new AlreadyTypedException("Already typed char, please retry.."), 'e'));
+		gui.printExceptionMessage(new AlreadyTypedException("Already typed char, please retry.."), 'e');
 
 		window.textBox("missesTextBox").requireText(" " + 'E');
 		window.label(JLabelMatcher.withText("Already typed char, please retry.."));
@@ -139,9 +144,9 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testPrintExceptionMessageWhenAlphabeticCharExceptionIsThrown() {
 		window.textBox("missesTextBox").setText(" " + Character.toUpperCase('e'));
-		GuiActionRunner.execute(() -> gui.printExceptionMessage(
+		gui.printExceptionMessage(
 				new AlreadyTypedException("The typed char is not alphabetic, please retry with an alphabetic one."),
-				'$'));
+				'$');
 
 		window.textBox("missesTextBox").requireText(" " + 'E');
 		window.label(JLabelMatcher.withText("The typed char is not alphabetic, please retry with an alphabetic one."));
@@ -151,8 +156,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesErrorCounterIncrementing() {
 		gui.setErrorCounter(0);
 
-		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
+		gui.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a');
 
 		assertThat(gui.getErrorCounter()).isOne();
 	}
@@ -161,13 +165,13 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForMoreThanOneTimeCausesErrorCounterIncrementing() {
 		gui.setErrorCounter(1);
 
-		GuiActionRunner.execute(() -> gui
-				.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a'));
+		gui.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a');
 
 		assertThat(gui.getErrorCounter()).isEqualTo(2);
 	}
 
 	@Test
+	@GUITest
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeChangeImage() {
 		gui.setErrorCounter(0);
 
@@ -178,6 +182,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
+	@GUITest
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForForMoreThanOneTimeChangeImage() {
 		gui.setErrorCounter(1);
 		gui.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a');
@@ -187,9 +192,10 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
+	@GUITest
 	public void testPrintGuessingWordWhenNoInputCharIsCorrect() {
 		char[] guessingWord = new char[] { '_', '_', '_', '_' };
-		GuiActionRunner.execute(() -> gui.printGuessingWord(guessingWord));
+		gui.printGuessingWord(guessingWord);
 
 		for (int i = 0; i < GUESSING_WORD_LENGTH; i++) {
 			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(" ");
@@ -197,9 +203,10 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
+	@GUITest
 	public void testPrintGuessingWordWhenAnInputCharIsCorrect() {
 		char[] guessingWord = new char[] { '_', 'e', '_', '_' };
-		GuiActionRunner.execute(() -> gui.printGuessingWord(guessingWord));
+		gui.printGuessingWord(guessingWord);
 
 		window.label(JLabelMatcher.withName("finalWordChar" + 1)).requireText("e".toUpperCase());
 
@@ -209,6 +216,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
+	@GUITest
 	public void testPrintGuessingWordWhenFinalWordIsCompleted() {
 		char[] guessingWord = new char[] { 't', 'e', 's', 't' };
 		gui.printGuessingWord(guessingWord);
@@ -235,10 +243,10 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("TRY")).click();
 		
 		window.textBox("charTextBox").requireText("");
+		window.button(JButtonMatcher.withText("TRY")).requireDisabled();
 	}
-	
+		
 	@Test
-	@GUITest
 	public void testClickButtonTryInsertsCharInTheQueueWhenCharInPresent() {
 		window.textBox("charTextBox").enterText("e");
 		window.button(JButtonMatcher.withText("TRY")).click();
@@ -247,11 +255,11 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
-	@GUITest
 	public void testClickButtonTryLeaveQueueUnchangedWhenCharIsNotInserted() {
 		gui.getQueue().clear();
 		window.button(JButtonMatcher.withText("TRY")).click();
 		
 		assertThat(gui.getQueue()).isEmpty();
 	}
+	
 }

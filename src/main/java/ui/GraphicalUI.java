@@ -140,6 +140,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 				queue.offer(charTextField.getText().toLowerCase().trim().charAt(0));
 				this.lblErrorMessage.setText(" ");
 				this.charTextField.setText("");
+				btnTry.setEnabled(false);
 			}
 		});
 
@@ -246,10 +247,6 @@ public class GraphicalUI extends JFrame implements UserInterface {
 
 	public void setErrorCounter(int i) {
 		this.errorCounter = i;
-	}
-
-	JLabel getLblImage() {
-		return this.lblImage;
 	}
 
 	BlockingQueue<Character> getQueue() {
