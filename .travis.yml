@@ -9,4 +9,4 @@ cache:
         - $HOME/.m2
 
 script:
-    - mvn clean verify
+    - execute-on-vnc.sh mvn clean verify
