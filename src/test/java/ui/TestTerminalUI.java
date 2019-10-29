@@ -1,18 +1,19 @@
 package ui;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
+import org.assertj.core.util.Lists;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InOrder;
 
 import exceptions.CharAbsenceException;
 import exceptions.IllegalCharException;
@@ -20,39 +21,46 @@ import graphics.Stickman;
 
 public class TestTerminalUI {
 
-	private InputStream in;
-	private Scanner scanner;
+	private static final String ILLGEAL_CHAR_MESSAGE = "The typed char is not alphabetic, please retry with an alphabetic one.";
+	private static final String ALREADY_TYPED_MESSAGE = "Already typed char, please retry..";
+	private static final String CHAR_NOT_PRESENT_MESSAGE = "The typed char is not present, please retry..";
+	private static final int FINAL_WORD_LENGTH = 4;
+	private static final PrintStream OLD_OUT = System.out;
+
+	private OutputStream out;
 	private TerminalUI terminal;
 
 	@Before
 	public void setup() {
-		in = mock(InputStream.class);
-		scanner = new Scanner(in);
-		terminal = new TerminalUI(scanner, 4);
+		out = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(out));
+		terminal = new TerminalUI(new Scanner(""), FINAL_WORD_LENGTH);
 	}
-	
+
+	private TerminalUI settingInput(String inputChar, int finalWordLength) {
+		terminal = new TerminalUI(new Scanner(inputChar), finalWordLength);
+		return terminal;
+	}
+
+	@After
+	public void teardown() {
+		System.setOut(OLD_OUT);
+	}
+
 	@Test
 	public void testGuessingWordIsPrintedWhenGameStarts() {
-		PrintStream out = mock(PrintStream.class);
+		terminal = settingInput("e", FINAL_WORD_LENGTH);
 
-		System.setOut(out);
-		
-		terminal = new TerminalUI(scanner, 4);
-
-		verify(out).println("\nGuessing word:");
-		verify(out).println("_ _ _ _");
+		assertThat(out.toString()).contains("\nGuessing word:");
+		assertThat(out.toString()).contains("_ _ _ _");
 	}
 
 	@Test
 	public void testGuessingWordOfAnotherLengthIsPrintedWhenGameStarts() {
-		PrintStream out = mock(PrintStream.class);
+		terminal = settingInput("e", 6);
 
-		System.setOut(out);
-
-		terminal = new TerminalUI(scanner, 6);
-
-		verify(out).println("\nGuessing word:");
-		verify(out).println("_ _ _ _ _ _");
+		assertThat(out.toString()).contains("\nGuessing word:");
+		assertThat(out.toString()).contains("_ _ _ _ _ _");
 	}
 
 	@Test
@@ -62,23 +70,15 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenCharIsRequested() {
-		PrintStream out = mock(PrintStream.class);
 
-		System.setOut(out);
-		scanner = new Scanner(new ByteArrayInputStream("e".getBytes()));
+		terminal.getInputChar();
 
-		terminal = new TerminalUI(scanner, 4);
-
-		char c = terminal.getInputChar();
-
-		verify(out).print("Insert a char: ");
+		assertThat(out.toString()).contains("Insert a char: ");
 	}
 
 	@Test
 	public void testGetInputCharWhenCharIsTyped() throws IOException {
-		scanner = new Scanner(new ByteArrayInputStream("e".getBytes()));
-
-		terminal = new TerminalUI(scanner, 4);
+		terminal = settingInput("e", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
 
@@ -87,9 +87,8 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenAnotherCharIsTyped() throws IOException {
-		scanner = new Scanner(new ByteArrayInputStream("a".getBytes()));
+		terminal = settingInput("a", FINAL_WORD_LENGTH);
 
-		terminal = new TerminalUI(scanner, 4);
 		char returned = terminal.getInputChar();
 
 		assertThat(returned).isEqualTo('a');
@@ -97,9 +96,16 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenSeveralCharsAreTyped() throws IOException {
-		scanner = new Scanner(new ByteArrayInputStream("abc".getBytes()));
+		terminal = settingInput("abc", FINAL_WORD_LENGTH);
 
-		terminal = new TerminalUI(scanner, 4);
+		char returned = terminal.getInputChar();
+
+		assertThat(returned).isEqualTo('a');
+	}
+
+	@Test
+	public void testGetInputCharReturnLowerCaseCharWhenCharTypedIsUpperCase() {
+		terminal = settingInput("A", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
 
@@ -108,9 +114,7 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenNumberCharIsTyped() throws IOException {
-		scanner = new Scanner(new ByteArrayInputStream("1".getBytes()));
-
-		terminal = new TerminalUI(scanner, 4);
+		terminal = settingInput("1", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
 
@@ -119,9 +123,7 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenSpecialCharIsTyped() throws IOException {
-		scanner = new Scanner(new ByteArrayInputStream("$".getBytes()));
-
-		terminal = new TerminalUI(scanner, 4);
+		terminal = settingInput("$", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
 
@@ -130,20 +132,16 @@ public class TestTerminalUI {
 
 	@Test
 	public void testGetInputCharWhenWhiteSpaceCharIsTyped() throws IOException {
-		scanner = new Scanner(new ByteArrayInputStream(" ".getBytes()));
-
-		terminal = new TerminalUI(scanner, 4);
+		terminal = settingInput(" ", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
 
 		assertThat(returned).isEqualTo(' ');
 	}
-	
+
 	@Test
 	public void testGetInputCharWhenNoCharIsTyped() throws IOException {
-		scanner = new Scanner(new ByteArrayInputStream("".getBytes()));
-
-		terminal = new TerminalUI(scanner, 4);
+		terminal = settingInput("", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
 
@@ -152,68 +150,56 @@ public class TestTerminalUI {
 
 	@Test
 	public void testIsGameWonWhenFinalWordIsCompleted() {
-		PrintStream out = mock(PrintStream.class);
-
-		System.setOut(out);
 
 		terminal.isGameWon(true);
 
-		verify(out).println("Congratulations!\nYOU WON =)\n--------GAME OVER--------");
+		assertThat(out.toString()).contains("Congratulations!\nYOU WON =)\n--------GAME OVER--------");
 	}
 
 	@Test
 	public void testIsGameWonWhenFinalWordIsNotCompleted() {
-		PrintStream out = mock(PrintStream.class);
-
-		System.setOut(out);
 
 		terminal.isGameWon(false);
 
-		verify(out).println("OH NO!\nYou've finished your remaining attempts =(\n--------GAME OVER--------");
+		assertThat(out.toString())
+				.contains("OH NO!\nYou've finished your remaining attempts =(\n--------GAME OVER--------");
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrown() {
-		PrintStream out = mock(PrintStream.class);
-
-		System.setOut(out);
-
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
+		terminal.setMisses(Lists.newArrayList());
+		terminal.printExceptionMessage(new CharAbsenceException(CHAR_NOT_PRESENT_MESSAGE), 'a');
 
 		assertThat(terminal.getMisses()).containsOnlyOnce('a');
-		verify(out).println("Char not present");
+		assertThat(out.toString()).contains(CHAR_NOT_PRESENT_MESSAGE);
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenAlreadyTypedExceptionIsThrown() {
 		terminal.setMisses(Arrays.asList('e'));
-		PrintStream out = mock(PrintStream.class);
 
-		System.setOut(out);
-
-		terminal.printExceptionMessage(new IllegalCharException("Char already typed"), 'e');
+		terminal.printExceptionMessage(new IllegalCharException(ALREADY_TYPED_MESSAGE), 'e');
 
 		assertThat(terminal.getMisses()).containsOnlyOnce('e');
-		verify(out).println("Char already typed");
+		assertThat(out.toString()).contains(ALREADY_TYPED_MESSAGE);
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenNotAlphabeticCharExceptionIsThrown() {
-		PrintStream out = mock(PrintStream.class);
-
-		System.setOut(out);
-
-		terminal.printExceptionMessage(new IllegalCharException("Char is not alphabetic"), '$');
+		terminal.setMisses(Lists.newArrayList());
+		terminal.printExceptionMessage(
+				new IllegalCharException(ILLGEAL_CHAR_MESSAGE), '$');
 
 		assertThat(terminal.getMisses()).doesNotContain('$');
-		verify(out).println("Char is not alphabetic");
+		assertThat(out.toString()).contains(ILLGEAL_CHAR_MESSAGE);
 	}
 
 	@Test
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesErrorCounterIncrementing() {
 		terminal.setErrorCounter(0);
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
+		terminal.printExceptionMessage(
+				new CharAbsenceException(CHAR_NOT_PRESENT_MESSAGE), 'a');
 
 		assertThat(terminal.getErrorCounter()).isOne();
 	}
@@ -222,86 +208,62 @@ public class TestTerminalUI {
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForMoreThanOneTimeCausesErrorCounterIncrementing() {
 		terminal.setErrorCounter(1);
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
+		terminal.printExceptionMessage(
+				new CharAbsenceException(CHAR_NOT_PRESENT_MESSAGE), 'a');
 
 		assertThat(terminal.getErrorCounter()).isEqualTo(2);
 	}
-	
+
 	@Test
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForTheFirstTimeCausesStickmanAndMissesPrinting() {
-		PrintStream out = mock(PrintStream.class);
+		terminal = settingInput("a", FINAL_WORD_LENGTH);
 		terminal.setErrorCounter(0);
 
-		System.setOut(out);
+		terminal.printExceptionMessage(new CharAbsenceException(CHAR_NOT_PRESENT_MESSAGE), 'a');
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
-
-		InOrder inOrder = inOrder(out);
-		inOrder.verify(out).println("Char not present");
-		inOrder.verify(out)
-				.println(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", "\n"));
-		inOrder.verify(out).println("MISSES: ");
-		inOrder.verify(out).println("[A]");
+		assertThat(out.toString())
+				.contains(CHAR_NOT_PRESENT_MESSAGE)
+				.contains(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", "\n"))
+				.contains("MISSES: ")
+				.contains("[A]");
 	}
-	
+
 	@Test
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrownForForMoreThanOneTimeCausesStickmanAndMissesPrinting() {
-		PrintStream out = mock(PrintStream.class);
+		terminal.setMisses(new LinkedList<>(Arrays.asList('b')));
 		terminal.setErrorCounter(1);
 
-		System.setOut(out);
+		terminal.printExceptionMessage(new CharAbsenceException(CHAR_NOT_PRESENT_MESSAGE), 'a');
 
-		terminal.printExceptionMessage(new CharAbsenceException("Char not present"), 'a');
-
-		InOrder inOrder = inOrder(out);
-		inOrder.verify(out).println("Char not present");
-		inOrder.verify(out)
-				.println(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", "\n"));
-		inOrder.verify(out).println("MISSES: ");
-		inOrder.verify(out).println("[A]");
+		assertThat(out.toString())
+				.contains(CHAR_NOT_PRESENT_MESSAGE)
+				.contains(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", "\n"))
+				.contains("MISSES: ")
+				.contains("[B, A]");
 	}
 
 	@Test
 	public void testPrintGuessingWordWhenFinalWordIsCompleted() {
-		PrintStream out = mock(PrintStream.class);
-
-		System.setOut(out);
 
 		terminal.printGuessingWord(new char[] { 't', 'e', 's', 't' });
 
-		verify(out).println("T E S T");
+		assertThat(out.toString()).contains("T E S T");
 	}
 
 	@Test
 	public void testPrintGuessingWordWhenAnInputCharIsCorrect() {
-		PrintStream out = mock(PrintStream.class);
-
-		System.setOut(out);
 
 		terminal.printGuessingWord(new char[] { '_', 'e', '_', '_' });
 
-		verify(out).println("_ E _ _");
+		assertThat(out.toString()).contains("_ E _ _");
 	}
 
 	@Test
 	public void testPrintGuessingWordWhenNoInputCharIsCorrect() {
-		PrintStream out = mock(PrintStream.class);
-
-		System.setOut(out);
 
 		terminal.printGuessingWord(new char[] { '_', '_', '_', '_' });
 
-		verify(out).println("_ _ _ _");
+		assertThat(out.toString()).contains("_ _ _ _");
 	}
 
-	@Test
-	public void testPrintStatusWhenStickmanDrawingIsPrinted() {
-		PrintStream out = mock(PrintStream.class);
-
-		System.setOut(out);
-
-		terminal.printStatus(0);
-
-		verify(out).println(Arrays.toString(Stickman.FIGURES[0]).replace("[", "").replace("]", "").replace(", ", "\n"));
-	}
 }
