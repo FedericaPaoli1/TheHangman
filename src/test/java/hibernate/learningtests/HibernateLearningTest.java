@@ -18,39 +18,6 @@ import org.testcontainers.containers.MySQLContainer;
 
 public class HibernateLearningTest {
 
-//	@Entity
-//	@Table(name = "Words")
-//	public class Word {
-//
-//		private Integer id;
-//		private String string;
-//
-//		public Word(int id, String string) {
-//			this.id = id;
-//			this.string = string;
-//		}
-//
-//		@Id
-//		@Column(name = "word_id")
-//		public Integer getId() {
-//			return id;
-//		}
-//
-//		@Column(name = "word_string")
-//		public String getString() {
-//			return string;
-//		}
-//
-//		public void setId(Integer id) {
-//			this.id = id;
-//		}
-//
-//		public void setString(String string) {
-//			this.string = string;
-//		}
-//
-//	}
-
 	private static class HibernateUtil {
 
 		private static final SessionFactory sessionFactory = buildSessionFactory();
@@ -172,11 +139,10 @@ public class HibernateLearningTest {
 		Query<Word> q = session.createQuery("select w from Word w", Word.class);
 		List<Word> wordsFromDb = q.list();
 
-		wordsFromDb.forEach(w -> System.out.println(w.getClass().getName()));
+		assertThat(wordsFromDb).contains(firstTestWord, secondTestWord);
 
 		Long wordsNumberFromDb = session.createQuery("SELECT COUNT(w) FROM Word w", Long.class).uniqueResult();
 
-		assertThat(wordsFromDb).contains(firstTestWord, secondTestWord);
 		assertThat(wordsNumberFromDb).isEqualTo(2);
 
 		session.close();
