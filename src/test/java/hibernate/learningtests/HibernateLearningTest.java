@@ -7,22 +7,21 @@ import java.util.Properties;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.testcontainers.containers.MySQLContainer;
-
 
 public class HibernateLearningTest {
 
 	private static class HibernateUtil {
 
-		private static final SessionFactory sessionFactory = buildSessionFactory();
+		private static final Configuration configuration = createConfiguration();
 
-		private static SessionFactory buildSessionFactory() {
+		private static Configuration buildConfiguration() {
 
 			Properties properties = new Properties();
 			properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
@@ -36,19 +35,16 @@ public class HibernateLearningTest {
 			properties.put("hibernate.c3p0.max_size", 5);
 			try {
 				return new Configuration().setProperties(properties)
-						.addAnnotatedClass(hibernate.learningtests.Word.class)
-						.buildSessionFactory(
-								new StandardServiceRegistryBuilder().applySettings(properties).build()
-								);
+						.addAnnotatedClass(hibernate.learningtests.Word.class);
 			} catch (Throwable ex) {
-				System.err.println("Initial SessionFactory creation failed." + ex);
+				System.err.println("Initial Configutation creation failed." + ex);
 				throw new ExceptionInInitializerError(ex);
 			}
 
 		}
 
-		public static SessionFactory getSessionFactory() {
-			return sessionFactory;
+		public static Configuration createConfiguration() {
+			return configuration;
 		}
 	}
 
@@ -56,11 +52,19 @@ public class HibernateLearningTest {
 	@ClassRule
 	public static MySQLContainer mysql = new MySQLContainer("mysql:5.7").withDatabaseName("TestDB");
 
+	private SessionFactory factory;
 	private Session session;
+	private static Configuration conf;
+
+	@BeforeClass
+	public static void beforeClass() {
+		conf = HibernateUtil.buildConfiguration();
+	}
 
 	@Before
 	public void setup() {
-		session = HibernateUtil.getSessionFactory().openSession();
+		factory = conf.buildSessionFactory();
+		session = factory.openSession();
 	}
 
 	@Test
@@ -146,6 +150,21 @@ public class HibernateLearningTest {
 		assertThat(wordsNumberFromDb).isEqualTo(2);
 
 		session.close();
+	}
+
+	@Test
+	public void fillDatabaseOnStartup() {
+		Configuration cf = HibernateUtil.buildConfiguration().setProperty(
+				"javax.persistence.sql-load-script-source",
+				"src/test/resources/testLoad.sql");
+
+		Session s = cf.buildSessionFactory().openSession();
+
+		Long wordsNumberFromDb = session.createQuery("SELECT COUNT(w) FROM Word w", Long.class).uniqueResult();
+
+		assertThat(wordsNumberFromDb).isGreaterThanOrEqualTo(1);
+
+		s.close();
 	}
 
 }
