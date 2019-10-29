@@ -2,58 +2,54 @@ package hibernate.learningtests;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Properties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.assertj.core.util.Arrays;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.testcontainers.containers.MySQLContainer;
 
+
 public class HibernateLearningTest {
 
-	@Entity
-	@Table(name = "Words")
-	private static class Word {
-
-		private Integer id;
-		private String string;
-
-		public Word(int id, String string) {
-			this.id = id;
-			this.string = string;
-		}
-
-		@Id
-		@Column(name = "word_id")
-		public Integer getId() {
-			return id;
-		}
-
-		@Column(name = "word_string")
-		public String getString() {
-			return string;
-		}
-
-		public void setId(Integer id) {
-			this.id = id;
-		}
-
-		public void setString(String string) {
-			this.string = string;
-		}
-
-	}
+//	@Entity
+//	@Table(name = "Words")
+//	public class Word {
+//
+//		private Integer id;
+//		private String string;
+//
+//		public Word(int id, String string) {
+//			this.id = id;
+//			this.string = string;
+//		}
+//
+//		@Id
+//		@Column(name = "word_id")
+//		public Integer getId() {
+//			return id;
+//		}
+//
+//		@Column(name = "word_string")
+//		public String getString() {
+//			return string;
+//		}
+//
+//		public void setId(Integer id) {
+//			this.id = id;
+//		}
+//
+//		public void setString(String string) {
+//			this.string = string;
+//		}
+//
+//	}
 
 	private static class HibernateUtil {
 
@@ -71,10 +67,12 @@ public class HibernateLearningTest {
 			properties.put("hibernate.connection.password", mysql.getPassword());
 			properties.put("hibernate.c3p0.min_size", 1);
 			properties.put("hibernate.c3p0.max_size", 5);
-
 			try {
-				return new Configuration().addProperties(properties).addAnnotatedClass(Word.class)
-						.buildSessionFactory(new StandardServiceRegistryBuilder().applySettings(properties).build());
+				return new Configuration().setProperties(properties)
+						.addAnnotatedClass(hibernate.learningtests.Word.class)
+						.buildSessionFactory(
+								new StandardServiceRegistryBuilder().applySettings(properties).build()
+								);
 			} catch (Throwable ex) {
 				System.err.println("Initial SessionFactory creation failed." + ex);
 				throw new ExceptionInInitializerError(ex);
@@ -90,7 +88,13 @@ public class HibernateLearningTest {
 	@SuppressWarnings("rawtypes")
 	@ClassRule
 	public static MySQLContainer mysql = new MySQLContainer("mysql:5.7").withDatabaseName("TestDB");
-	private final Session session = HibernateUtil.getSessionFactory().openSession();
+
+	private Session session;
+
+	@Before
+	public void setup() {
+		session = HibernateUtil.getSessionFactory().openSession();
+	}
 
 	@Test
 	public void create() {
@@ -153,30 +157,28 @@ public class HibernateLearningTest {
 		session.getTransaction().rollback();
 		session.close();
 	}
-	
+
 	@Test
 	public void query() {
-		session.beginTransaction();
-		
+
 		Word firstTestWord = new Word(1, "firstTest");
 		Word secondTestWord = new Word(2, "secondTest");
-		
+
+		session.beginTransaction();
 		session.save(firstTestWord);
 		session.save(secondTestWord);
 		session.getTransaction().commit();
-		
-		session.beginTransaction();
-		List<Word> wordsFromDb = (List<Word>) session.createSQLQuery("SELECT * FROM Words").getResultList();
-		wordsFromDb.forEach(System.out::println);
-		session.getTransaction().commit();
-		
-		session.beginTransaction();
-		BigInteger wordsNumberFromDb = (BigInteger) session.createSQLQuery("SELECT COUNT(*) FROM Words").uniqueResult();
-		session.getTransaction().commit();
-		
+
+		Query<Word> q = session.createQuery("select w from Word w", Word.class);
+		List<Word> wordsFromDb = q.list();
+
+		wordsFromDb.forEach(w -> System.out.println(w.getClass().getName()));
+
+		Long wordsNumberFromDb = session.createQuery("SELECT COUNT(w) FROM Word w", Long.class).uniqueResult();
+
 		assertThat(wordsFromDb).contains(firstTestWord, secondTestWord);
 		assertThat(wordsNumberFromDb).isEqualTo(2);
-		
+
 		session.close();
 	}
 
