@@ -5,5 +5,4 @@ jdk: openjdk8
 install: skip
 
 script:
-	- mvn clean verify
-
+    - mvn clean verify
