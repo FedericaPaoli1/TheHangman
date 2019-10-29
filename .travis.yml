@@ -5,7 +5,7 @@ jdk: openjdk8
 install: true
 
 script:
-	- mvn -f com.examples.myproject/pom.xml clean verify
+	- mvn clean verify
 
 cache:
 	directories:
