@@ -2,7 +2,11 @@ language: java
 
 jdk: openjdk8
 
-install: skip
+install: true
+
+cache:
+    directory:
+        - $HOME/.m2
 
 script:
     - mvn clean verify
