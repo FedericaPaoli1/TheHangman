@@ -5,7 +5,6 @@ jdk: openjdk8
 
 services:
     - docker
-    - xvfb
 
 install: true
 
