@@ -4,6 +4,9 @@ jdk: openjdk8
 
 env: DISPLAY=:99.0
 
+services:
+    - docker
+
 install: true
 
 cache:
