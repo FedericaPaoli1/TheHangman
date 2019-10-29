@@ -5,6 +5,7 @@ jdk: openjdk8
 
 services:
     - docker
+    - xvfb
 
 install: true
 
@@ -13,5 +14,4 @@ cache:
         - $HOME/.m2
 
 script:
-    - xvfb-run make test
     - mvn clean verify
