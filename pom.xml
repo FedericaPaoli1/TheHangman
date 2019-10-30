@@ -17,6 +17,21 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>jacoco</id>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- configured in pluginManagement -->
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<dependencies>
 
 		<dependency>
@@ -172,6 +187,22 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+							<!-- binds by default to the phase "verify" -->
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 
 		</plugins>
 	</build>
