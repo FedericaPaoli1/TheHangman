@@ -2,8 +2,20 @@ language: java
 
 jdk: openjdk8
 
+# lock distro for gui test
+dist: xenial
+
+services:
+    - docker
+    - xvfb # enable DISPLAY
+
 install: true
 
+cache:
+    directory:
+        - $HOME/.m2
+
 script:
-	- mvn -f paoli.taverni.thehangman/pom.xml clean verify
+    - mvn clean verify
+
 
