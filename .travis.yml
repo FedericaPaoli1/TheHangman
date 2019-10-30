@@ -16,6 +16,6 @@ cache:
         - $HOME/.m2
 
 script:
-    - mvn clean verify -Pjacoco
+    - mvn clean verify -Pjacoco coveralls:report
 
 
