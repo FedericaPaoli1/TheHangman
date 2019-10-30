@@ -9,12 +9,20 @@ services:
     - docker
     - xvfb # enable DISPLAY
 
+addons:
+  sonarcloud:
+    organization: "federicapaoli1"
+    token:
+      secure: $SONAR_TOKEN
+
 install: true
 
 cache:
-    directory:
+    directories:
         - $HOME/.m2
+        - $HOME/.sonar/cache
 
 script:
-    - mvn clean verify
+    - mvn clean verify -Pjacoco coveralls:report sonar:sonar
+
 
