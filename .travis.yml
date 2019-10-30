@@ -24,4 +24,3 @@ cache:
 
 script:
     - mvn clean verify -Pjacoco sonar:sonar
-
