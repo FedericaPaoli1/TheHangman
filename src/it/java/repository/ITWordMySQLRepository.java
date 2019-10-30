@@ -21,10 +21,10 @@ public class ITWordMySQLRepository {
 	public static MySQLContainer mysql = new MySQLContainer("mysql:5.7").withDatabaseName("HangmanDB");
 
 	private static SessionFactory factory;
+	private static Configuration conf;
 
 	private Session session;
 	private WordMySQLRepository repo;
-	private static Configuration conf;
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -33,43 +33,42 @@ public class ITWordMySQLRepository {
 		conf = new Configuration().configure()
 				.setProperty("hibernate.connection.url", mysql.getJdbcUrl() + "?useSSL=false")
 				.setProperty("hibernate.connection.username", mysql.getUsername())
-				.setProperty("hibernate.connection.password", mysql.getPassword())
-				.setProperty("javax.persistence.sql-load-script-source", "src/e2e/resources/testLoad.sql");
+				.setProperty("hibernate.connection.password", mysql.getPassword());
+		factory = conf.buildSessionFactory();
 	}
 
 	@Before
 	public void setup() {
-		factory = conf.buildSessionFactory();
-		session = factory.openSession();
-
 		repo = new WordMySQLRepository(factory);
-	}
 
-	@Test
-	public void testDatabaseContainsElementsWhenCreated() {
-		session.beginTransaction();
-		Long rows = (Long) session.createQuery("SELECT COUNT(*) FROM Word").uniqueResult();
-		session.getTransaction().commit();
-
-		assertThat(rows).isGreaterThanOrEqualTo(1);
-	}
-
-	@Test
-	public void testGetRandomWordWhenDatabaseIsEmpty() {
+		session = factory.openSession();
 		deleteAllRowsFromDatabase();
-
-		assertThat(repo.getRandomWord()).isNull();
 	}
 
 	private void deleteAllRowsFromDatabase() {
 		session.beginTransaction();
-		session.createSQLQuery("DELETE FROM Words").executeUpdate();
+		session.createQuery("DELETE FROM Word").executeUpdate();
 		session.getTransaction().commit();
+	}
+
+	@After
+	public void tearDown() {
+		session.close();
+	}
+
+	@AfterClass
+	public static void afterClass() {
+		factory.close();
+		mysql.stop();
+	}
+
+	@Test
+	public void testGetRandomWordWhenDatabaseIsEmpty() {
+		assertThat(repo.getRandomWord()).isNull();
 	}
 
 	@Test
 	public void testGetRandomWordWhenDatabaseHasOneRow() {
-		deleteAllRowsFromDatabase();
 		addWord(1, "test");
 
 		assertThat(repo.getRandomWord()).isEqualTo("test");
@@ -88,24 +87,12 @@ public class ITWordMySQLRepository {
 
 	@Test
 	public void testGetRandomWordWhenDatabaseHasSeveralRows() {
-		deleteAllRowsFromDatabase();
 		addWord(1, "test");
 		addWord(2, "dog");
 		addWord(3, "night");
 
 		for (int i = 0; i < 10; i++)
 			assertThat(repo.getRandomWord()).isIn(asList("test", "dog", "night"));
-	}
-
-	@After
-	public void teardown() {
-		session.close();
-	}
-
-	@AfterClass
-	public static void afterClass() {
-		factory.close();
-		mysql.stop();
 	}
 
 }
