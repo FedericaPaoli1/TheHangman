@@ -23,5 +23,5 @@ cache:
 	- $HOME/.sonar/cache
 
 script:
-    - mvn clean verify -Pjacoco coveralls:report sonar:sonar
+    - mvn clean verify -Pjacoco sonar:sonar
 
