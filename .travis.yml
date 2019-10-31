@@ -24,6 +24,5 @@ cache:
 
 script:
     - mvn clean verify -Pjacoco coveralls:report sonar:sonar
-    - sonar-scanner
 
 
