@@ -38,36 +38,37 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 
 	@Test
 	public void testControlsInitialStates() {
-		window.label(JLabelMatcher.withName("gameResult")).requireText(" ");
-		window.label(JLabelMatcher.withName("image"));
+		assertThat(window.label(JLabelMatcher.withName("gameResult")).target().getText()).isEqualTo(" ");
+		assertThat(window.label(JLabelMatcher.withName("image")).target().isShowing()).isTrue();
 		for (int i = 0; i < GUESSING_WORD_LENGTH; i++) {
 			window.label(JLabelMatcher.withName("finalWordChar" + i));
 		}
-		window.button(JButtonMatcher.withText("TRY")).requireDisabled();
-		window.textBox("charTextBox").requireEditable().requireEnabled();
-		window.label(JLabelMatcher.withText("MISSES: "));
-		window.textBox("missesTextBox").requireNotEditable();
+		assertThat(window.button(JButtonMatcher.withText("TRY")).target().isEnabled()).isFalse();
+		assertThat(window.textBox("charTextBox").target().isEditable()).isTrue();
+		assertThat(window.textBox("charTextBox").target().isEnabled()).isTrue();
+		assertThat(window.label(JLabelMatcher.withText("MISSES: ")).target().isShowing()).isTrue();
+		assertThat(window.textBox("missesTextBox").target().isEditable()).isFalse();
 	}
 
 	@Test
 	@GUITest
 	public void testWhenCharIsTypedThenTryButtonShouldBeEnabled() {
 		window.textBox("charTextBox").enterText("e");
-		window.button(JButtonMatcher.withText("TRY")).requireEnabled();
+		assertThat(window.button(JButtonMatcher.withText("TRY")).target().isEnabled()).isTrue();
 	}
 
 	@Test
 	@GUITest
 	public void testWhenWhiteSpacesAreTypedThenTryButtonShouldBeDisabled() {
 		window.textBox("charTextBox").enterText("   ");
-		window.button(JButtonMatcher.withText("TRY")).requireDisabled();
+		assertThat(window.button(JButtonMatcher.withText("TRY")).target().isEnabled()).isFalse();
 	}
 
 	@Test
 	@GUITest
 	public void testWhenWhiteSpacesAreFollowedByACharThenTryButtonShouldBeEnabled() {
 		window.textBox("charTextBox").enterText("   c");
-		window.button(JButtonMatcher.withText("TRY")).requireEnabled();
+		assertThat(window.button(JButtonMatcher.withText("TRY")).target().isEnabled()).isTrue();
 	}
 
 	@Test
@@ -123,14 +124,14 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	public void testIsGameWonWhenIsTrue() {
 		gui.isGameWon(true);
 
-		window.label(JLabelMatcher.withText("Congratulations! YOU WON =)"));
+		assertThat(window.label(JLabelMatcher.withText("Congratulations! YOU WON =)")).target().isShowing()).isTrue();
 	}
 
 	@Test
 	public void testIsGameWonWhenIsFalse() {
 		gui.isGameWon(false);
 
-		window.label(JLabelMatcher.withText("OH NO! You've finished your remaining attempts =("));
+		assertThat(window.label(JLabelMatcher.withText("OH NO! You've finished your remaining attempts =(")).target().isShowing()).isTrue();
 	}
 
 	@Test
@@ -138,8 +139,8 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrown() {
 		gui.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a');
 
-		window.textBox("missesTextBox").requireText(" " + 'A');
-		window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
+		assertThat(window.textBox("missesTextBox").target().getText()).isEqualTo(" " + 'A');
+		assertThat(window.label(JLabelMatcher.withText("The typed char is not present, please retry..")).target().isShowing()).isTrue();
 	}
 
 	@Test
@@ -149,8 +150,8 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 
 		gui.printExceptionMessage(new AlreadyTypedException("Already typed char, please retry.."), 'e');
 
-		window.textBox("missesTextBox").requireText(" " + 'E');
-		window.label(JLabelMatcher.withText("Already typed char, please retry.."));
+		assertThat(window.textBox("missesTextBox").target().getText()).isEqualTo(" " + 'E');
+		assertThat(window.label(JLabelMatcher.withText("Already typed char, please retry..")).target().isShowing()).isTrue();
 	}
 
 	@Test
@@ -160,7 +161,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 				new AlreadyTypedException("The typed char is not alphabetic, please retry with an alphabetic one."),
 				'$');
 
-		window.textBox("missesTextBox").requireText(" " + 'E');
+		assertThat(window.textBox("missesTextBox").target().getText()).isEqualTo(" " + 'E');
 		window.label(JLabelMatcher.withText("The typed char is not alphabetic, please retry with an alphabetic one."));
 	}
 
@@ -210,7 +211,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		gui.printGuessingWord(guessingWord);
 
 		for (int i = 0; i < GUESSING_WORD_LENGTH; i++) {
-			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(" ");
+			assertThat(window.label(JLabelMatcher.withName("finalWordChar" + i)).target().getText()).isEqualTo(" ");
 		}
 	}
 
@@ -223,7 +224,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		window.label(JLabelMatcher.withName("finalWordChar" + 1)).requireText("e".toUpperCase());
 
 		for (int i = 0; i < GUESSING_WORD_LENGTH && i != 1; i++) {
-			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(" ");
+			assertThat(window.label(JLabelMatcher.withName("finalWordChar" + i)).target().getText()).isEqualTo(" ");
 		}
 	}
 
@@ -234,7 +235,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		gui.printGuessingWord(guessingWord);
 
 		for (int i = 0; i < GUESSING_WORD_LENGTH; i++) {
-			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(("" + guessingWord[i]).toUpperCase());
+			assertThat(window.label(JLabelMatcher.withName("finalWordChar" + i)).target().getText()).isEqualTo(("" + guessingWord[i]).toUpperCase());
 		}
 	}
 
@@ -245,7 +246,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		window.textBox("charTextBox").enterText("e");
 		window.button(JButtonMatcher.withText("TRY")).click();
 
-		window.label("errorMessage").requireText(" ");
+		assertThat(window.label("errorMessage").target().getText()).isEqualTo(" ");
 	}
 
 	@Test
@@ -254,8 +255,8 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 		window.textBox("charTextBox").enterText("e");
 		window.button(JButtonMatcher.withText("TRY")).click();
 
-		window.textBox("charTextBox").requireText("");
-		window.button(JButtonMatcher.withText("TRY")).requireDisabled();
+		assertThat(window.textBox("charTextBox").target().getText()).isEqualTo("");
+		assertThat(window.button(JButtonMatcher.withText("TRY")).target().isEnabled()).isFalse();
 	}
 
 	@Test
