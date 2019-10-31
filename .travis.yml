@@ -9,6 +9,9 @@ services:
     - docker
     - xvfb # enable DISPLAY
 
+env:
+    - if: branch = master
+        SONAR="sonar:sonar"
 addons:
   sonarcloud:
     organization: "federicapaoli1"
@@ -22,9 +25,6 @@ cache:
         - $HOME/.m2
         - $HOME/.sonar/cache
 
-
-if: branch = master
-    - env: SONAR="sonar:sonar"
 
 script:
     - mvn clean verify -Pjacoco $SONAR
