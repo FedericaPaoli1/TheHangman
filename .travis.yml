@@ -22,5 +22,9 @@ cache:
         - $HOME/.m2
         - $HOME/.sonar/cache
 
+
+env: SONAR="sonar:sonar"
+if: branch = master
+
 script:
-    - mvn clean verify sonar:sonar -Pjacoco 
+    - mvn clean verify -Pjacoco $SONAR
