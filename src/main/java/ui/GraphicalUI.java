@@ -1,6 +1,5 @@
 package ui;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 
 import javax.swing.JFrame;
@@ -28,9 +27,6 @@ import java.awt.Color;
 
 public class GraphicalUI extends JFrame implements UserInterface {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField charTextField;
@@ -44,25 +40,6 @@ public class GraphicalUI extends JFrame implements UserInterface {
 	private JLabel lblErrorMessage;
 	private BlockingQueue<Character> queue = new ArrayBlockingQueue<Character>(1);
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GraphicalUI frame = new GraphicalUI(Integer.parseInt(args[0]));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public GraphicalUI(int guessingWordLength) {
 		setTitle("The Hangman");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -136,10 +113,10 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		gbc_btnTry.gridy = 4;
 		contentPane.add(btnTry, gbc_btnTry);
 		btnTry.addActionListener(e -> {
-				queue.offer(charTextField.getText().toLowerCase().trim().charAt(0));
-				this.lblErrorMessage.setText(" ");
-				this.charTextField.setText("");
-				this.btnTry.setEnabled(false);
+			queue.offer(charTextField.getText().toLowerCase().trim().charAt(0));
+			this.lblErrorMessage.setText(" ");
+			this.charTextField.setText("");
+			this.btnTry.setEnabled(false);
 		});
 
 		charTextField = new JTextField();
@@ -244,7 +221,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		return this.errorCounter;
 	}
 
-	public void setErrorCounter(int i) {
+	void setErrorCounter(int i) {
 		this.errorCounter = i;
 	}
 
