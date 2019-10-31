@@ -36,10 +36,10 @@
 			**/Word.*,
 			**/TheHangmanApp.*
 		</sonar.coverage.exclusions>
-		<sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.jacoco.reportPaths>
 			${project.build.directory}/surefire-reports,
 			${project.build.directory}/failsafe-reports
-		</sonar.coverage.jacoco.xmlReportPaths>
+		</sonar.coverage.jacoco.reportPaths>
 	</properties>
 
 	<dependencies>
