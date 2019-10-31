@@ -9,9 +9,11 @@ services:
     - docker
     - xvfb # enable DISPLAY
 
-env:
-    - if: branch = master
-        SONAR="sonar:sonar"
+job:
+    include:
+        - if: branch = master
+          env: SONAR="sonar:sonar"
+
 addons:
   sonarcloud:
     organization: "federicapaoli1"
