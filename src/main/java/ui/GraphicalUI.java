@@ -27,6 +27,7 @@ import java.awt.Color;
 
 public class GraphicalUI extends JFrame implements UserInterface {
 
+	private static final String DIALOG_FONT = "Dialog";
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField charTextField;
@@ -38,7 +39,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 	private JLabel lblGameResult;
 	private int errorCounter;
 	private JLabel lblErrorMessage;
-	private BlockingQueue<Character> queue = new ArrayBlockingQueue<Character>(1);
+	private BlockingQueue<Character> queue = new ArrayBlockingQueue<>(1);
 
 	public GraphicalUI(int guessingWordLength) {
 		setTitle("The Hangman");
@@ -61,7 +62,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		for (int i = 0; i < charLabels.length; i++) {
 			JLabel lblChar = new JLabel(" ");
 			lblChar.setName("finalWordChar" + i);
-			lblChar.setFont(new Font("Dialog", Font.BOLD, 40));
+			lblChar.setFont(new Font(DIALOG_FONT, Font.BOLD, 40));
 			lblChar.setForeground(Color.BLACK);
 			lblChar.setBackground(new Color(255, 255, 255));
 			lblChar.setBorder(new LineBorder(new Color(0, 0, 0), 2));
@@ -92,7 +93,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		gbc_lblImage.gridx = 0;
 		gbc_lblImage.gridy = 1;
 		contentPane.add(lblImage, gbc_lblImage);
-
+		
 		lblGameResult = new JLabel(" ");
 		lblGameResult.setName("gameResult");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -104,7 +105,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.add(lblGameResult, gbc_lblNewLabel_1);
 
 		btnTry = new JButton("TRY");
-		btnTry.setFont(new Font("Dialog", Font.BOLD, 18));
+		btnTry.setFont(new Font(DIALOG_FONT, Font.BOLD, 18));
 		btnTry.setEnabled(false);
 		GridBagConstraints gbc_btnTry = new GridBagConstraints();
 		gbc_btnTry.anchor = GridBagConstraints.EAST;
@@ -113,10 +114,11 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		gbc_btnTry.gridy = 4;
 		contentPane.add(btnTry, gbc_btnTry);
 		btnTry.addActionListener(e -> {
-			queue.offer(charTextField.getText().toLowerCase().trim().charAt(0));
-			this.lblErrorMessage.setText(" ");
-			this.charTextField.setText("");
-			this.btnTry.setEnabled(false);
+			if (queue.offer(charTextField.getText().toLowerCase().trim().charAt(0))) {
+				this.lblErrorMessage.setText(" ");
+				this.charTextField.setText("");
+				this.btnTry.setEnabled(false);
+			}
 		});
 
 		charTextField = new JTextField();
@@ -132,7 +134,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		charTextField.addKeyListener(btnEnabler);
 
 		lblMisses = new JLabel("MISSES: ");
-		lblMisses.setFont(new Font("Dialog", Font.BOLD, 18));
+		lblMisses.setFont(new Font(DIALOG_FONT, Font.BOLD, 18));
 		lblMisses.setName("misses");
 		GridBagConstraints gbc_lblMisses = new GridBagConstraints();
 		gbc_lblMisses.gridwidth = 2;
@@ -144,7 +146,7 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		contentPane.add(lblMisses, gbc_lblMisses);
 
 		missesTextField = new JTextField();
-		missesTextField.setFont(new Font("Dialog", Font.PLAIN, 15));
+		missesTextField.setFont(new Font(DIALOG_FONT, Font.PLAIN, 15));
 		missesTextField.setName("missesTextBox");
 		missesTextField.setEditable(false);
 		missesTextField.setText("");
@@ -178,7 +180,8 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		try {
 			c = queue.take();
 		} catch (InterruptedException e) {
-			throw new IllegalStateException(e);
+		    Thread.currentThread().interrupt();
+		    throw new IllegalStateException(e);
 		}
 		return c;
 	}
@@ -197,13 +200,10 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		SwingUtilities.invokeLater(() -> lblErrorMessage.setText(e.getMessage()));
 		if (e instanceof CharAbsenceException) {
 			this.errorCounter++;
-			SwingUtilities.invokeLater(() -> {
-				missesTextField.setText((missesTextField.getText() + " " + Character.toUpperCase(wrongChar)));
-			});
-			SwingUtilities.invokeLater(() -> {
-				lblImage.setIcon(
-						new ImageIcon(GraphicalUI.class.getResource("/images/error_" + this.errorCounter + ".png")));
-			});
+			SwingUtilities.invokeLater(() -> missesTextField
+					.setText((missesTextField.getText() + " " + Character.toUpperCase(wrongChar))));
+			SwingUtilities.invokeLater(() -> lblImage.setIcon(
+					new ImageIcon(GraphicalUI.class.getResource("/images/error_" + this.errorCounter + ".png"))));
 		}
 	}
 

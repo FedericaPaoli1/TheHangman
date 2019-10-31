@@ -104,14 +104,18 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 
 		assertThat(gui.getInputChar()).isEqualTo('a');
 	}
-	
+
 	@Test
 	public void testGetInputCharWhenIllegalStateExceptionIsThrown() {
 		gui.getQueue().clear();
 		
-		Thread.currentThread().interrupt();
+		Thread t = new Thread(() -> {
+			Thread.currentThread().interrupt();
+
+			assertThatThrownBy(() -> gui.getInputChar()).isInstanceOf(IllegalStateException.class);
+		});
 		
-		assertThatThrownBy(() -> gui.getInputChar()).isInstanceOf(IllegalStateException.class);
+		t.start();	
 	}
 
 	@Test
@@ -132,8 +136,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 	@Test
 	@GUITest
 	public void testPrintExceptionMessageWhenCharAbsenceExceptionIsThrown() {
-		gui.printExceptionMessage(
-				new CharAbsenceException("The typed char is not present, please retry.."), 'a');
+		gui.printExceptionMessage(new CharAbsenceException("The typed char is not present, please retry.."), 'a');
 
 		window.textBox("missesTextBox").requireText(" " + 'A');
 		window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
@@ -234,7 +237,7 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(("" + guessingWord[i]).toUpperCase());
 		}
 	}
-	
+
 	@Test
 	@GUITest
 	public void testClickButtonTryClearsErrorMessageWhenCharIsCorrect() {
@@ -244,31 +247,31 @@ public class TestGraphicalUI extends AssertJSwingJUnitTestCase {
 
 		window.label("errorMessage").requireText(" ");
 	}
-	
+
 	@Test
 	@GUITest
 	public void testButtonTryClearInsertLabelWhenClicked() {
 		window.textBox("charTextBox").enterText("e");
 		window.button(JButtonMatcher.withText("TRY")).click();
-		
+
 		window.textBox("charTextBox").requireText("");
 		window.button(JButtonMatcher.withText("TRY")).requireDisabled();
 	}
-		
+
 	@Test
 	public void testClickButtonTryInsertsCharInTheQueueWhenCharInPresent() {
 		window.textBox("charTextBox").enterText("e");
 		window.button(JButtonMatcher.withText("TRY")).click();
-		
+
 		assertThat(gui.getQueue()).contains('e');
 	}
-	
+
 	@Test
 	public void testClickButtonTryLeaveQueueUnchangedWhenCharIsNotInserted() {
 		gui.getQueue().clear();
 		window.button(JButtonMatcher.withText("TRY")).click();
-		
+
 		assertThat(gui.getQueue()).isEmpty();
 	}
-	
+
 }
