@@ -1,7 +1,7 @@
 package main;
 
 import static org.assertj.swing.launcher.ApplicationLauncher.*;
-
+import static org.assertj.core.api.Assertions.*;
 import javax.swing.JFrame;
 
 import org.assertj.swing.annotation.GUITest;
@@ -52,7 +52,7 @@ public class TheHangmanAppE2E extends AssertJSwingJUnitTestCase {
 	@GUITest
 	public void testCorrectInputChar() {
 		setInputAndClick("e");
-		window.label(JLabelMatcher.withName("finalWordChar1")).requireText("E");
+		assertThat(window.label(JLabelMatcher.withName("finalWordChar1")).target().getText()).isEqualTo("E");
 	}
 
 	@Test
@@ -62,8 +62,8 @@ public class TheHangmanAppE2E extends AssertJSwingJUnitTestCase {
 		for (int i = 0; i < 4; i++) {
 			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(" ");
 		}
-		window.textBox("missesTextBox").requireText(" " + 'A');
-		window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
+		assertThat(window.textBox("missesTextBox").target().getText()).isEqualTo(" " + 'A');
+		assertThat(window.label(JLabelMatcher.withText("The typed char is not present, please retry..")).target().isShowing()).isTrue();
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class TheHangmanAppE2E extends AssertJSwingJUnitTestCase {
 		String[] inputs = { "t", "e", "s" };
 		for (int i = 0; i < inputs.length; i++) {
 			setInputAndClick(inputs[i]);
-			window.label(JLabelMatcher.withName("finalWordChar" + i)).requireText(inputs[i].toUpperCase());
+			assertThat(window.label(JLabelMatcher.withName("finalWordChar" + i)).target().getText()).isEqualTo(inputs[i].toUpperCase());
 		}
 	}
 
@@ -82,8 +82,8 @@ public class TheHangmanAppE2E extends AssertJSwingJUnitTestCase {
 		String[] inputs = { "a", "b", "c", "d", "f", "g" };
 		for (int i = 0; i < inputs.length; i++) {
 			setInputAndClick(inputs[i]);
-			window.textBox("missesTextBox").requireText(".*" + inputs[i].toUpperCase());
-			window.label(JLabelMatcher.withText("The typed char is not present, please retry.."));
+			assertThat(window.textBox("missesTextBox").target().getText()).isEqualTo(".*" + inputs[i].toUpperCase());
+			assertThat(window.label(JLabelMatcher.withText("The typed char is not present, please retry..")).target().isShowing()).isTrue();
 		}
 	}
 
