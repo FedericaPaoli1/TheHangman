@@ -1,22 +1,18 @@
 package engine;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import exceptions.NotAlphabeticCharException;
 
 public class TestInputController {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
+	private static final String ERROR_MESSAGE = "The typed char is not alphabetic, please retry with an alphabetic one";
 	private static final String WORD_TO_GUESS = "test";
 	private InputController controller;
 	private List<Character> alreadyTyped;
@@ -30,30 +26,30 @@ public class TestInputController {
 
 	@Test
 	public void testIsPresentWhenCharNotAppear() {
-		assertFalse(controller.isPresent('a'));
+		assertThat(controller.isPresent('a')).isFalse();
 	}
 
 	@Test
 	public void testIsPresentWhenCharAppears() {
-		assertTrue(controller.isPresent('e'));
+		assertThat(controller.isPresent('e')).isTrue();
 	}
 
 	@Test
 	public void testIsPresentWhenFinalWordIsEmpty() {
 		controller = new InputController("");
-		assertFalse(controller.isPresent('e'));
+		assertThat(controller.isPresent('e')).isFalse();
 	}
 
 	@Test
 	public void testIsAlreadyTypedWhenItIsTheFirstTime() throws Exception {
-		assertFalse(controller.isAlreadyTyped('a'));
-		assertTrue(alreadyTyped.contains('a'));
+		assertThat(controller.isAlreadyTyped('a')).isFalse();
+		assertThat(alreadyTyped.contains('a')).isTrue();
 	}
 
 	@Test
 	public void testIsAlreadyTypedWhenItIsTheFirstTimeOfAnotherChar() throws Exception {
-		assertFalse(controller.isAlreadyTyped('e'));
-		assertTrue(alreadyTyped.contains('e'));
+		assertThat(controller.isAlreadyTyped('e')).isFalse();
+		assertThat(alreadyTyped.contains('e')).isTrue();
 	}
 
 	@Test
@@ -61,23 +57,23 @@ public class TestInputController {
 		char charToTest = 'e';
 		alreadyTyped.add(charToTest);
 
-		assertTrue(controller.isAlreadyTyped(charToTest));
-		assertTrue(alreadyTyped.size() == 1);
-		assertTrue(alreadyTyped.contains(charToTest));
+		assertThat(controller.isAlreadyTyped(charToTest)).isTrue();
+		assertThat(alreadyTyped.size() == 1).isTrue();
+		assertThat(alreadyTyped.contains(charToTest)).isTrue();
 	}
 
 	@Test
 	public void testIsAlreadyTypedWhenNumericCharShouldThrown() throws Exception {
-		thrown.expect(NotAlphabeticCharException.class);
-		thrown.expectMessage("The typed char is not alphabetic, please retry with an alphabetic one");
-		controller.isAlreadyTyped('1');
+		assertThatThrownBy(() -> controller.isAlreadyTyped('1'))
+			.isInstanceOf(NotAlphabeticCharException.class)
+			.as(ERROR_MESSAGE);
 	}
 
 	@Test
 	public void testIsAlreadyTypedWhenSpecialCharacterShouldThrown() throws Exception {
-		thrown.expect(NotAlphabeticCharException.class);
-		thrown.expectMessage("The typed char is not alphabetic, please retry with an alphabetic one");
-		controller.isAlreadyTyped('$');
+		assertThatThrownBy(() -> controller.isAlreadyTyped('$'))
+			.isInstanceOf(NotAlphabeticCharException.class)
+			.as(ERROR_MESSAGE);
 	}
 
 }
