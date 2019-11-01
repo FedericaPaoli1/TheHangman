@@ -112,6 +112,31 @@
 	</dependencies>
 
 	<build>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>1.4.3</version>
+					<configuration>
+						<targetClasses>
+							<param>engine.*</param>
+							<param>ui.Terminal*</param>
+						</targetClasses>
+						<targetTests>
+							<param>engine.*</param>
+							<param>ui.TestTerminal*</param>
+						</targetTests>
+						<mutators>
+							<mutator>ALL</mutator>
+						</mutators>
+						<mutationThreshold>98</mutationThreshold>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

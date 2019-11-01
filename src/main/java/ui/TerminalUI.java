@@ -24,7 +24,6 @@ public class TerminalUI implements UserInterface {
 		System.out.println("\nGuessing word:");
 		Arrays.fill(guessingWord, '_');
 		printGuessingWord(guessingWord);
-		this.errorCounter = 0;
 		printStatus(this.errorCounter);
 	}
 

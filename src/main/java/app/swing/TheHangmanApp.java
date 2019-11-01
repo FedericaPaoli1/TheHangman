@@ -54,14 +54,13 @@ public class TheHangmanApp implements Callable<Void> {
 					.withPassword(this.mysqlPassword).withExposedPort("" + this.mysqlPort)
 					.withDatabaseName(this.databaseName).build();
 			loadTestScript(isTestMode, conf);
-
 			WordMySQLRepository repository = new WordMySQLRepository(conf.buildSessionFactory());
 			String finalWord = repository.getRandomWord();
 
 			setupGraphicsAndStartGameLoop(mode, finalWord);
 
 		} catch (Exception e) {
-			LOGGER.info("Can cause Exception");
+			LOGGER.info("Can cause Exception" );
 		}
 		return null;
 	}

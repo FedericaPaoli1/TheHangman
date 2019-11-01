@@ -62,6 +62,15 @@ public class TestTerminalUI {
 		assertThat(out.toString()).contains("\nGuessing word:");
 		assertThat(out.toString()).contains("_ _ _ _ _ _");
 	}
+	
+	@Test
+	public void testStickmanIsShownWhenGameStarts() {
+		assertThat(out.toString()).contains(Arrays.
+				toString(Stickman.IMMUTABLE_FIGURES.get(0))
+				.replace("[", "")
+				.replace("]", "")
+				.replace(", ", "\n"));
+	}
 
 	@Test
 	public void testErrorCounterIsZeroWhenGameStarts() {
@@ -244,10 +253,10 @@ public class TestTerminalUI {
 
 	@Test
 	public void testPrintGuessingWordWhenFinalWordIsCompleted() {
-
+		
 		terminal.printGuessingWord(new char[] { 't', 'e', 's', 't' });
 
-		assertThat(out.toString()).contains("T E S T");
+		assertThat(out.toString()).containsPattern("(?m)^T E S T$");
 	}
 
 	@Test
@@ -255,7 +264,7 @@ public class TestTerminalUI {
 
 		terminal.printGuessingWord(new char[] { '_', 'e', '_', '_' });
 
-		assertThat(out.toString()).contains("_ E _ _");
+		assertThat(out.toString()).containsPattern("(?m)_ E _ _$");
 	}
 
 	@Test
@@ -263,7 +272,7 @@ public class TestTerminalUI {
 
 		terminal.printGuessingWord(new char[] { '_', '_', '_', '_' });
 
-		assertThat(out.toString()).contains("_ _ _ _");
+		assertThat(out.toString()).containsPattern("(?m)^_ _ _ _$");
 	}
 
 }
