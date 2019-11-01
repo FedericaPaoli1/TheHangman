@@ -12,14 +12,14 @@ public class TerminalUI implements UserInterface {
 
 	public static final String WINNING_MESSAGE = "Congratulations!\nYOU WON =)\n--------GAME OVER--------";
 	public static final String LOOSING_MESSAGE = "OH NO!\nYou've finished your remaining attempts =(\n--------GAME OVER--------";
-	
+
 	private Scanner scanner;
 	private int errorCounter;
 	private List<Character> misses;
 
 	public TerminalUI(Scanner scanner, int guessingWordLength) {
 		this.scanner = scanner;
-		this.misses = new LinkedList<Character>();
+		this.misses = new LinkedList<>();
 		char[] guessingWord = new char[guessingWordLength];
 		System.out.println("\nGuessing word:");
 		Arrays.fill(guessingWord, '_');
@@ -56,12 +56,13 @@ public class TerminalUI implements UserInterface {
 
 	@Override
 	public void printGuessingWord(char[] guessingWord) {
-		System.out.println(Arrays.toString(guessingWord).toUpperCase().replace("[", "").replace("]", "").replace(", ", " "));
+		System.out.println(
+				Arrays.toString(guessingWord).toUpperCase().replace("[", "").replace("]", "").replace(", ", " "));
 	}
 
 	private void printStatus(int figureIndex) {
-		System.out.println(
-				Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(figureIndex)).replace("[", "").replace("]", "").replace(", ", "\n"));
+		System.out.println(Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(figureIndex)).replace("[", "")
+				.replace("]", "").replace(", ", "\n"));
 		System.out.println("MISSES: ");
 		System.out.println(Arrays.toString(misses.toArray()).toUpperCase());
 	}
@@ -74,11 +75,11 @@ public class TerminalUI implements UserInterface {
 		this.errorCounter = i;
 	}
 
-	 List<Character> getMisses() {
+	List<Character> getMisses() {
 		return this.misses;
 	}
 
-	 void setMisses(List<Character> misses) {
+	void setMisses(List<Character> misses) {
 		this.misses = misses;
 	}
 

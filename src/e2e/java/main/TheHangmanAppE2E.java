@@ -82,7 +82,7 @@ public class TheHangmanAppE2E extends AssertJSwingJUnitTestCase {
 		String[] inputs = { "a", "b", "c", "d", "f", "g" };
 		for (int i = 0; i < inputs.length; i++) {
 			setInputAndClick(inputs[i]);
-			assertThat(window.textBox("missesTextBox").target().getText()).isEqualTo(".*" + inputs[i].toUpperCase());
+			assertThat(window.textBox("missesTextBox").target().getText()).containsPattern(".*" + inputs[i].toUpperCase());
 			assertThat(window.label(JLabelMatcher.withText("The typed char is not present, please retry..")).target().isShowing()).isTrue();
 		}
 	}
