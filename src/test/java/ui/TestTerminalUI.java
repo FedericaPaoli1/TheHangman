@@ -62,7 +62,16 @@ public class TestTerminalUI {
 		assertThat(out.toString()).contains("\nGuessing word:");
 		assertThat(out.toString()).contains("_ _ _ _ _ _");
 	}
-
+	
+	@Test
+	public void testStickmanIsShownWhenGameStarts() {
+		assertThat(out.toString()).contains(Arrays.
+				toString(Stickman.IMMUTABLE_FIGURES.get(0))
+				.replace("[", "")
+				.replace("]", "")
+				.replace(", ", "\n"));
+	}
+	
 	@Test
 	public void testErrorCounterIsZeroWhenGameStarts() {
 		assertThat(terminal.getErrorCounter()).isZero();
@@ -113,7 +122,7 @@ public class TestTerminalUI {
 	}
 
 	@Test
-	public void testGetInputCharWhenNumberCharIsTyped() throws IOException {
+	public void testGetInputCharWhenNumberCharIsTyped() {
 		terminal = settingInput("1", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
@@ -122,7 +131,7 @@ public class TestTerminalUI {
 	}
 
 	@Test
-	public void testGetInputCharWhenSpecialCharIsTyped() throws IOException {
+	public void testGetInputCharWhenSpecialCharIsTyped() {
 		terminal = settingInput("$", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
@@ -131,7 +140,7 @@ public class TestTerminalUI {
 	}
 
 	@Test
-	public void testGetInputCharWhenWhiteSpaceCharIsTyped() throws IOException {
+	public void testGetInputCharWhenWhiteSpaceCharIsTyped() {
 		terminal = settingInput(" ", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
@@ -140,7 +149,7 @@ public class TestTerminalUI {
 	}
 
 	@Test
-	public void testGetInputCharWhenNoCharIsTyped() throws IOException {
+	public void testGetInputCharWhenNoCharIsTyped() {
 		terminal = settingInput("", FINAL_WORD_LENGTH);
 
 		char returned = terminal.getInputChar();
@@ -223,9 +232,9 @@ public class TestTerminalUI {
 
 		assertThat(out.toString())
 				.contains(CHAR_NOT_PRESENT_MESSAGE)
-				.contains(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", "\n"))
-				.contains("MISSES: ")
-				.contains("[A]");
+				.contains(Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(1))
+						.replace("[", "|").replace("]", "_").replace(", ", "\n"))
+				.contains("MISSES: [A]");
 	}
 
 	@Test
@@ -237,33 +246,54 @@ public class TestTerminalUI {
 
 		assertThat(out.toString())
 				.contains(CHAR_NOT_PRESENT_MESSAGE)
-				.contains(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", "\n"))
-				.contains("MISSES: ")
-				.contains("[B, A]");
+				.contains(Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(2))
+						.replace("[", "|").replace("]", "_").replace(", ", "\n"))
+				.contains("MISSES: [B, A]");
 	}
 
 	@Test
 	public void testPrintGuessingWordWhenFinalWordIsCompleted() {
+		char[] testArray = "test".toCharArray();
+		
+		terminal.printGuessingWord(testArray);
 
-		terminal.printGuessingWord(new char[] { 't', 'e', 's', 't' });
-
-		assertThat(out.toString()).contains("T E S T");
+		assertThat(out.toString()).containsPattern("(?m).*: T E S T$");
+		assertThat(terminal.getGuessingWord()).isEqualTo(testArray);
 	}
 
 	@Test
 	public void testPrintGuessingWordWhenAnInputCharIsCorrect() {
+		char[] testArray = "_e__".toCharArray();
 
-		terminal.printGuessingWord(new char[] { '_', 'e', '_', '_' });
+		terminal.printGuessingWord(testArray);
 
-		assertThat(out.toString()).contains("_ E _ _");
+		assertThat(out.toString()).containsPattern("(?m).*: _ E _ _$");
+		assertThat(terminal.getGuessingWord()).isEqualTo(testArray);
 	}
 
 	@Test
 	public void testPrintGuessingWordWhenNoInputCharIsCorrect() {
+		char[] testArray = "____".toCharArray();
 
-		terminal.printGuessingWord(new char[] { '_', '_', '_', '_' });
+		terminal.printGuessingWord(testArray);
 
-		assertThat(out.toString()).contains("_ _ _ _");
+		assertThat(out.toString()).containsPattern("(?m).*: _ _ _ _$");
+		assertThat(terminal.getGuessingWord()).isEqualTo(testArray);
 	}
+	
+	@Test
+	public void testPrintGuessingWordDoesNotChangeStickmanWhenIsCalled() {
+		String headSymbol = "*";
+		String armSymbol = "\\";
+		String legSymbol = "/";
 
+		terminal.setErrorCounter(0);
+		
+		terminal.printGuessingWord(("_e__".toCharArray()));
+		
+		assertThat(out.toString()).doesNotContain(headSymbol)
+			.doesNotContain(armSymbol)
+			.doesNotContain(legSymbol);
+	}
+	
 }

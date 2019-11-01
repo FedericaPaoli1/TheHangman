@@ -5,7 +5,7 @@ import org.hibernate.cfg.Configuration;
 public class ConfigurationBuilder {
 
 	private static final String CONNECTION_URL = "hibernate.connection.url";
-	private static final String CONNECTION_PASSWORD = "hibernate.connection.password";
+	private static final String CONNECTION_LOGIN = "hibernate.connection.password";
 	private static final String CONNECTION_USERNAME = "hibernate.connection.username";
 
 	private String username;
@@ -36,7 +36,7 @@ public class ConfigurationBuilder {
 	public Configuration build() {
 		Configuration conf = new Configuration().configure();
 		conf.setProperty(CONNECTION_USERNAME, this.username);
-		conf.setProperty(CONNECTION_PASSWORD, this.password);
+		conf.setProperty(CONNECTION_LOGIN, this.password);
 		conf.setProperty(CONNECTION_URL, "jdbc:mysql://localhost:" + this.exposedPort + "/" + this.databaseName + "?useSSL=false");
 		return conf;
 	}

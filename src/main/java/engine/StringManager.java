@@ -6,7 +6,7 @@ public class StringManager {
 
 	static final char EMPTY_CHAR = '_';
 	
-	private char[] guessingWord = {};
+	private char[] guessingWord;
 	private String finalWord;
 	
 	public StringManager(String finalWord) 

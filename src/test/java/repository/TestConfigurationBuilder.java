@@ -22,13 +22,18 @@ public class TestConfigurationBuilder {
 
 	@Test
 	public void testBuildSetsAllParameters() {
-		builder.withExposedPort(PORT).withPassword(PASSWORD).withUsername(USERNAME);
+		builder.withExposedPort(PORT)
+			.withPassword(PASSWORD)
+			.withUsername(USERNAME)
+			.withDatabaseName("TestDB");
 
 		Configuration conf = builder.build();
 
 		assertThat(conf.getProperty("hibernate.connection.username")).isEqualTo(USERNAME);
 		assertThat(conf.getProperty("hibernate.connection.password")).isEqualTo(PASSWORD);
-		assertThat(conf.getProperty("hibernate.connection.url")).containsPattern(".*" + PORT + ".*");
+		assertThat(conf.getProperty("hibernate.connection.url"))
+			.containsPattern(".*" + PORT + ".*")
+			.containsPattern(".*" + "TestDB" + ".*");
 	}
 
 }

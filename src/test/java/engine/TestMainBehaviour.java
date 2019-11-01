@@ -22,7 +22,6 @@ public class TestMainBehaviour {
 	
 	@Spy
 	private MainExecutive executive = new MainExecutive(
-			FINAL_WORD, 
 			new StringManager(FINAL_WORD), 
 			new InputController(FINAL_WORD)
 		);

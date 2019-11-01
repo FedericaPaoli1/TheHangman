@@ -1,5 +1,6 @@
 package engine;
 
+import static org.assertj.core.api.Assertions.*;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -25,7 +26,7 @@ public class ITGUIMainBehaviour extends AssertJSwingJUnitTestCase {
 		});
 		manager = new StringManager(STRING_UNDER_TEST);
 		controller = new InputController(STRING_UNDER_TEST);
-		bh = new MainBehaviour(new MainExecutive(STRING_UNDER_TEST, manager, controller), ui);
+		bh = new MainBehaviour(new MainExecutive(manager, controller), ui);
 		window = new FrameFixture(robot(), ui);
 		window.show();
 	}
@@ -34,20 +35,20 @@ public class ITGUIMainBehaviour extends AssertJSwingJUnitTestCase {
 	public void testMainBehaviourUpdatesViewWhenCharIsCorrect() {
 		bh.executeControl('e');
 
-		window.label("finalWordChar1").requireText("E");
+		assertThat(window.label("finalWordChar1").target().getText()).isEqualTo("E");
 	}
 
 	@Test
 	public void testWhenCharIsWrong() {
 		bh.executeControl('a');
 
-		window.label("errorMessage").requireText("The typed char is not present, please retry..");
-		window.textBox("missesTextBox").requireText(" A");
+		assertThat(window.label("errorMessage").target().getText()).isEqualTo("The typed char is not present, please retry..");
+		assertThat(window.textBox("missesTextBox").target().getText()).isEqualTo(" A");
 
 		bh.executeControl('$');
 
-		window.label("errorMessage").requireText("The typed char is not alphabetic, please retry with an alphabetic one.");
-		window.textBox("missesTextBox").requireText(" A"); //unchanged
+		assertThat(window.label("errorMessage").target().getText()).isEqualTo("The typed char is not alphabetic, please retry with an alphabetic one.");
+		assertThat(window.textBox("missesTextBox").target().getText()).isEqualTo(" A"); 
 	}
 
 	@Test
@@ -56,7 +57,7 @@ public class ITGUIMainBehaviour extends AssertJSwingJUnitTestCase {
 		manager.setGuessingWord("test".toCharArray());
 		bh.gameLoop();
 
-		window.label("gameResult").requireText("Congratulations! YOU WON =)");
+		assertThat(window.label("gameResult").target().getText()).isEqualTo("Congratulations! YOU WON =)");
 	}
 	
 }

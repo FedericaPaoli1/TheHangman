@@ -4,7 +4,9 @@ import java.awt.EventQueue;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.hibernate.cfg.Configuration;
+import org.jboss.logging.Logger;
 
 import engine.InputController;
 import engine.MainBehaviour;
@@ -21,14 +23,16 @@ import ui.TerminalUI;
 @Command(mixinStandardHelpOptions = true)
 public class TheHangmanApp implements Callable<Void> {
 
+	private static final Logger LOGGER = LoggerFactory.logger(TheHangmanApp.class);
+
 	@Option(names = { "--mysql-port" }, description = "mysql host port")
 	private int mysqlPort = 3306;
 
 	@Option(names = { "--mysql-username" }, description = "mysql username")
 	private String mysqlUsername = "root";
 
-	@Option(names = { "--mysql-password" }, description = "mysql password")
-	private String mysqlPassword = "root";
+	@Option(names = { "--mysql-password" }, arity = "0..1", description = "mysql password", interactive = true)
+	private String mysqlPassword;
 
 	@Option(names = { "--db-name" }, description = "database name")
 	private String databaseName = "HangmanDB";
@@ -40,55 +44,40 @@ public class TheHangmanApp implements Callable<Void> {
 	private boolean isTestMode;
 
 	public static void main(String[] args) {
-		CommandLine.call(new TheHangmanApp(), args);
+		new CommandLine(new TheHangmanApp()).execute(args);
 	}
 
 	@Override
 	public Void call() throws Exception {
 		try {
-			Configuration conf = new ConfigurationBuilder()
-					.withUsername(this.mysqlUsername)
-					.withPassword(this.mysqlPassword)
-					.withExposedPort("" + this.mysqlPort)
-					.withDatabaseName(this.databaseName)
-					.build();
+			Configuration conf = new ConfigurationBuilder().withUsername(this.mysqlUsername)
+					.withPassword(this.mysqlPassword).withExposedPort("" + this.mysqlPort)
+					.withDatabaseName(this.databaseName).build();
 			loadTestScript(isTestMode, conf);
-
 			WordMySQLRepository repository = new WordMySQLRepository(conf.buildSessionFactory());
 			String finalWord = repository.getRandomWord();
-			
+
 			setupGraphicsAndStartGameLoop(mode, finalWord);
-		
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info("Can cause Exception" );
 		}
 		return null;
 	}
 
 	private static void setupGraphicsAndStartGameLoop(String mode, String finalWord) {
-		if (mode.equals("graphical")) 
-		{
+		if (mode.equals("graphical")) {
 			EventQueue.invokeLater(() -> {
 				GraphicalUI gui = new GraphicalUI(finalWord.length());
 				gui.setVisible(true);
 				MainBehaviour behaviour = new MainBehaviour(
-						new MainExecutive(
-								finalWord, 
-								new StringManager(finalWord), 
-								new InputController(finalWord)),
-						gui);
-				new Thread(() -> behaviour.gameLoop()).start();
+						new MainExecutive(new StringManager(finalWord), new InputController(finalWord)), gui);
+				new Thread(behaviour::gameLoop).start();
 			});
-		} 
-		else if (mode.equals("terminal")) 
-		{
+		} else if (mode.equals("terminal")) {
 			TerminalUI ui = new TerminalUI(new Scanner(System.in), finalWord.length());
 			MainBehaviour behaviour = new MainBehaviour(
-				new MainExecutive(
-						finalWord, 
-						new StringManager(finalWord), 
-						new InputController(finalWord)),
-				ui);
+					new MainExecutive(new StringManager(finalWord), new InputController(finalWord)), ui);
 			behaviour.gameLoop();
 		}
 	}

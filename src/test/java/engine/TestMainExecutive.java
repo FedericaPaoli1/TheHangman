@@ -21,7 +21,7 @@ public class TestMainExecutive {
 	public void setup() {
 		manager = spy(new StringManager(FINAL_WORD));
 		controller = spy(new InputController(FINAL_WORD));
-		exec = new MainExecutive(FINAL_WORD, manager, controller);
+		exec = new MainExecutive(manager, controller);
 	}
 
 	@Test
