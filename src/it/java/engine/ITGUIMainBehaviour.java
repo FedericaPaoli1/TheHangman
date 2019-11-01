@@ -25,7 +25,7 @@ public class ITGUIMainBehaviour extends AssertJSwingJUnitTestCase {
 		});
 		manager = new StringManager(STRING_UNDER_TEST);
 		controller = new InputController(STRING_UNDER_TEST);
-		bh = new MainBehaviour(new MainExecutive(STRING_UNDER_TEST, manager, controller), ui);
+		bh = new MainBehaviour(new MainExecutive(manager, controller), ui);
 		window = new FrameFixture(robot(), ui);
 		window.show();
 	}

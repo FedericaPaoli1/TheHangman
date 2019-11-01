@@ -1,8 +1,15 @@
 package graphics;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 public class Stickman {
 	
-	public static final String[] BACKING = {
+	private Stickman() {}
+	
+	private static final String[] BACKING = {
 			"_____________", 
 			"|           |", 
 			"|           |", 
@@ -21,7 +28,7 @@ public class Stickman {
     };
 	
 	
-	public static final String[] HEAD = {
+	private static final String[] HEAD = {
 			"_____________", 
 			"|           |", 
 			"|           |", 
@@ -39,7 +46,7 @@ public class Stickman {
             "|"
     };
 	
-	public static final String[] BODY = {
+	private static final String[] BODY = {
 			"_____________", 
 			"|           |", 
 			"|           |", 
@@ -57,7 +64,7 @@ public class Stickman {
             "|"
     };
 	
-	public static final String[] RIGHT_ARM = {
+	private static final String[] RIGHT_ARM = {
 			"_____________", 
 			"|           |", 
 			"|           |", 
@@ -75,7 +82,7 @@ public class Stickman {
             "|"
     };
 	
-	public static final String[] ARMS = {
+	private static final String[] ARMS = {
 			"_____________", 
 			"|           |", 
 			"|           |", 
@@ -93,7 +100,7 @@ public class Stickman {
             "|"
     };
 	
-	public static final String[] RIGHT_FOOT = {
+	private static final String[] RIGHT_FOOT = {
 			"_____________", 
 			"|           |", 
 			"|           |", 
@@ -111,7 +118,7 @@ public class Stickman {
             "|"
     };
 	
-	public static final String[] COMPLETE_STICKMAN = {
+	private static final String[] COMPLETE_STICKMAN = {
 			"_____________", 
 			"|           |", 
 			"|           |", 
@@ -129,6 +136,8 @@ public class Stickman {
             "|"
     };
 	
-	public static final String[][] FIGURES = {BACKING, HEAD, BODY, RIGHT_ARM, ARMS, RIGHT_FOOT, COMPLETE_STICKMAN};
+	private static final List<String[]> FIGURES = new LinkedList<>(Arrays.asList(BACKING, HEAD, BODY, RIGHT_ARM, ARMS, RIGHT_FOOT, COMPLETE_STICKMAN));
+	
+	public static final List<String[]> IMMUTABLE_FIGURES = Collections.unmodifiableList(FIGURES);
 
 }

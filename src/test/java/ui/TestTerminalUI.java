@@ -223,7 +223,7 @@ public class TestTerminalUI {
 
 		assertThat(out.toString())
 				.contains(CHAR_NOT_PRESENT_MESSAGE)
-				.contains(Arrays.toString(Stickman.FIGURES[1]).replace("[", "").replace("]", "").replace(", ", "\n"))
+				.contains(Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(1)).replace("[", "").replace("]", "").replace(", ", "\n"))
 				.contains("MISSES: ")
 				.contains("[A]");
 	}
@@ -237,7 +237,7 @@ public class TestTerminalUI {
 
 		assertThat(out.toString())
 				.contains(CHAR_NOT_PRESENT_MESSAGE)
-				.contains(Arrays.toString(Stickman.FIGURES[2]).replace("[", "").replace("]", "").replace(", ", "\n"))
+				.contains(Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(2)).replace("[", "").replace("]", "").replace(", ", "\n"))
 				.contains("MISSES: ")
 				.contains("[B, A]");
 	}

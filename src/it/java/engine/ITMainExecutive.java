@@ -23,7 +23,7 @@ public class ITMainExecutive {
 	public void setup() {
 		manager = new StringManager("test");
 		controller = new InputController("test");
-		exec = new MainExecutive("test", manager, controller);
+		exec = new MainExecutive(manager, controller);
 	}
 	
 	@Test

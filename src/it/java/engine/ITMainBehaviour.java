@@ -33,7 +33,7 @@ public class ITMainBehaviour {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		behaviour = new MainBehaviour(new MainExecutive("test", new StringManager("test"), new InputController("test")),
+		behaviour = new MainBehaviour(new MainExecutive(new StringManager("test"), new InputController("test")),
 				ui);
 	}
 

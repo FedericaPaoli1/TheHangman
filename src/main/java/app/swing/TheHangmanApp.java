@@ -73,7 +73,6 @@ public class TheHangmanApp implements Callable<Void> {
 				gui.setVisible(true);
 				MainBehaviour behaviour = new MainBehaviour(
 						new MainExecutive(
-								finalWord, 
 								new StringManager(finalWord), 
 								new InputController(finalWord)),
 						gui);
@@ -85,7 +84,6 @@ public class TheHangmanApp implements Callable<Void> {
 			TerminalUI ui = new TerminalUI(new Scanner(System.in), finalWord.length());
 			MainBehaviour behaviour = new MainBehaviour(
 				new MainExecutive(
-						finalWord, 
 						new StringManager(finalWord), 
 						new InputController(finalWord)),
 				ui);

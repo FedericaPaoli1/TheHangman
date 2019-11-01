@@ -7,12 +7,10 @@ import exceptions.NotAlphabeticCharException;
 
 public class MainExecutive {
 
-	private String finalWord;
 	private StringManager manager;
 	private InputController controller;
 
-	public MainExecutive(String finalWord, StringManager manager, InputController controller) {
-		this.finalWord = finalWord;
+	public MainExecutive(StringManager manager, InputController controller) {
 		this.manager = manager;
 		this.controller = controller;
 	}

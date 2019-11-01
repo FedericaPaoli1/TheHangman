@@ -61,7 +61,7 @@ public class TerminalUI implements UserInterface {
 
 	private void printStatus(int figureIndex) {
 		System.out.println(
-				Arrays.toString(Stickman.FIGURES[figureIndex]).replace("[", "").replace("]", "").replace(", ", "\n"));
+				Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(figureIndex)).replace("[", "").replace("]", "").replace(", ", "\n"));
 		System.out.println("MISSES: ");
 		System.out.println(Arrays.toString(misses.toArray()).toUpperCase());
 	}
