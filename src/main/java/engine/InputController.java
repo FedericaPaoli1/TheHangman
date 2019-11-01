@@ -12,7 +12,7 @@ public class InputController {
 
 	public InputController(String finalWord) {
 		this.finalWord = finalWord;
-		this.alreadyTyped = new LinkedList<Character>();
+		this.alreadyTyped = new LinkedList<>();
 	}
 
 	public boolean isPresent(char c) {
