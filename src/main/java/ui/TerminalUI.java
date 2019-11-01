@@ -16,15 +16,25 @@ public class TerminalUI implements UserInterface {
 	private Scanner scanner;
 	private int errorCounter;
 	private List<Character> misses;
+	private char[] guessingWord;
 
 	public TerminalUI(Scanner scanner, int guessingWordLength) {
 		this.scanner = scanner;
 		this.misses = new LinkedList<>();
-		char[] guessingWord = new char[guessingWordLength];
-		System.out.println("\nGuessing word:");
+		this.guessingWord = new char[guessingWordLength];
 		Arrays.fill(guessingWord, '_');
-		printGuessingWord(guessingWord);
 		printStatus(this.errorCounter);
+	}
+
+	private void printStatus(int figureIndex) {
+		System.out.print("\nGuessing word: ");
+		System.out.println(Arrays.toString(guessingWord)
+				.toUpperCase()
+				.replace("[", "").replace("]", "").replace(", ", " "));
+		System.out.println(Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(figureIndex)).replace("[", "|")
+				.replace("]", "_").replace(", ", "\n"));
+		System.out.print("MISSES: ");
+		System.out.println(Arrays.toString(misses.toArray()).toUpperCase());
 	}
 
 	@Override
@@ -49,28 +59,22 @@ public class TerminalUI implements UserInterface {
 		if (e instanceof CharAbsenceException) {
 			this.errorCounter++;
 			misses.add(wrongChar);
-			printStatus(this.errorCounter);
 		}
+		printStatus(this.errorCounter);
 	}
 
 	@Override
 	public void printGuessingWord(char[] guessingWord) {
-		System.out.println(
-				Arrays.toString(guessingWord).toUpperCase().replace("[", "").replace("]", "").replace(", ", " "));
+		this.guessingWord = guessingWord;
+		printStatus(this.errorCounter);
 	}
 
-	private void printStatus(int figureIndex) {
-		System.out.println(Arrays.toString(Stickman.IMMUTABLE_FIGURES.get(figureIndex)).replace("[", "")
-				.replace("]", "").replace(", ", "\n"));
-		System.out.println("MISSES: ");
-		System.out.println(Arrays.toString(misses.toArray()).toUpperCase());
-	}
 
-	public int getErrorCounter() {
+	int getErrorCounter() {
 		return this.errorCounter;
 	}
 
-	public void setErrorCounter(int i) {
+	void setErrorCounter(int i) {
 		this.errorCounter = i;
 	}
 
@@ -80,6 +84,10 @@ public class TerminalUI implements UserInterface {
 
 	void setMisses(List<Character> misses) {
 		this.misses = misses;
+	}
+
+	char[] getGuessingWord() {
+		return this.guessingWord;
 	}
 
 }
