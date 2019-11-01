@@ -1,6 +1,6 @@
 package repository;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 public class WordMySQLRepository implements RepositoryInterface {
 
 	private static final String COUNT_ALL_WORDS = "SELECT COUNT(w) FROM Word w";
-	private static final Random GENERATOR = new Random();
+	private static final SecureRandom GENERATOR = new SecureRandom();
 	private SessionFactory factory;
 
 	public WordMySQLRepository(SessionFactory factory) {
