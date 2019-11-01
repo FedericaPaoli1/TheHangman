@@ -19,6 +19,9 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.jboss.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -27,8 +30,10 @@ import java.awt.Color;
 
 public class GraphicalUI extends JFrame implements UserInterface {
 
+	private static final Logger LOGGER = LoggerFactory.logger(GraphicalUI.class);
 	private static final String DIALOG_FONT = "Dialog";
 	private static final long serialVersionUID = 1L;
+	
 	private JPanel contentPane;
 	private JTextField charTextField;
 	private JTextField missesTextField;
@@ -114,11 +119,12 @@ public class GraphicalUI extends JFrame implements UserInterface {
 		gbc_btnTry.gridy = 4;
 		contentPane.add(btnTry, gbc_btnTry);
 		btnTry.addActionListener(e -> {
-			if (queue.offer(charTextField.getText().toLowerCase().trim().charAt(0))) {
+				boolean result = queue.offer(charTextField.getText().toLowerCase().trim().charAt(0));
 				this.lblErrorMessage.setText(" ");
 				this.charTextField.setText("");
 				this.btnTry.setEnabled(false);
-			}
+				LOGGER.info("Offer result: " + result);
+			
 		});
 
 		charTextField = new JTextField();
