@@ -11,8 +11,28 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.coverage.jacoco.reportPaths>
-		../thehangman-report/site/jacoco-aggregate/
+			../thehangman-report/site/jacoco-aggregate/
 		</sonar.coverage.jacoco.reportPaths>
+		<sonar.issue.ignore.multicriteria>e11, e12</sonar.issue.ignore.multicriteria>
+
+		<sonar.issue.ignore.multicriteria.e11.ruleKey>
+			squid:MaximumInheritanceDepth
+		</sonar.issue.ignore.multicriteria.e11.ruleKey>
+		<sonar.issue.ignore.multicriteria.e11.resourceKey>
+			**/*.java
+		</sonar.issue.ignore.multicriteria.e11.resourceKey>
+		<sonar.issue.ignore.multicriteria.e12.ruleKey>
+			squid:S00117
+		</sonar.issue.ignore.multicriteria.e12.ruleKey>
+		<sonar.issue.ignore.multicriteria.e12.resourceKey>
+			**/GraphicalUI.java
+		</sonar.issue.ignore.multicriteria.e12.resourceKey>
+
+		<sonar.coverage.exclusions>
+			**/graphics/*.*,
+			**/Word.*,
+			**/TheHangmanApp.*
+		</sonar.coverage.exclusions>
 	</properties>
 
 	<modules>
