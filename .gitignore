@@ -1,6 +1,5 @@
-target/
+**/target
 
 *.class
-/target/
-/.metadata/
-/.metadata/
+.sonarlint
+.metadata

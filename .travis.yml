@@ -23,6 +23,6 @@ cache:
         - $HOME/.sonar/cache
 
 script:
-    - mvn -f thehangman-aggregator/pom.xml clean verify -Pjacoco coveralls:report sonar:sonar
+    - mvn -f thehangman-aggregator/pom.xml clean verify -Papp,jacoco coveralls:report sonar:sonar
 
 
