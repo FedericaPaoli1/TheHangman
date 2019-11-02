@@ -31,7 +31,8 @@
 		<sonar.coverage.exclusions>
 			**/graphics/*.*,
 			**/Word.*,
-			**/TheHangmanApp.*
+			**/TheHangmanApp.*,
+			**/exceptions/*.*
 		</sonar.coverage.exclusions>
 	</properties>
 
