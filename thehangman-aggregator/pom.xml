@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>paoli.taverni</groupId>
+	<artifactId>thehangman-aggregator</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar.coverage.jacoco.reportPaths>
+		../thehangman-report/site/jacoco-aggregate/
+		</sonar.coverage.jacoco.reportPaths>
+	</properties>
+
+	<modules>
+		<module>../thehangman-bom</module>
+		<module>../thehangman-parent</module>
+		<module>../thehangman-engine-module</module>
+		<module>../thehangman-exceptions-module</module>
+		<module>../thehangman-ui-module</module>
+		<module>../thehangman-repository-module</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<id>app</id>
+			<modules>
+				<module>../thehangman-app</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>jacoco</id>
+			<modules>
+				<module>../thehangman-report</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>mutation-testing</id>
+			<modules>
+				<module>../thehangman-report</module>
+			</modules>
+		</profile>
+	</profiles>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.3.0</version>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
