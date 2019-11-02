@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>WordMySQLRepository.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">thehangman-report</a> &gt; <a href="../index.html" class="el_bundle">thehangman-repository-module</a> &gt; <a href="index.source.html" class="el_package">repository</a> &gt; <span class="el_source">WordMySQLRepository.java</span></div><h1>WordMySQLRepository.java</h1><pre class="source lang-java linenums">package repository;
+
+import java.security.SecureRandom;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+public class WordMySQLRepository implements RepositoryInterface {
+
+	private static final String COUNT_ALL_WORDS = &quot;SELECT COUNT(w) FROM Word w&quot;;
+<span class="fc" id="L11">	private static final SecureRandom GENERATOR = new SecureRandom();</span>
+	private SessionFactory factory;
+
+<span class="fc" id="L14">	public WordMySQLRepository(SessionFactory factory) {</span>
+<span class="fc" id="L15">		this.factory = factory;</span>
+<span class="fc" id="L16">	}</span>
+
+	@Override
+	public String getRandomWord() {
+<span class="fc" id="L20">		String string = null;</span>
+
+<span class="fc" id="L22">		Session session = factory.getCurrentSession();</span>
+<span class="fc" id="L23">		session.beginTransaction();</span>
+
+<span class="fc" id="L25">		Long numberOfRows = session.createQuery(COUNT_ALL_WORDS, Long.class).uniqueResult();</span>
+
+<span class="fc bfc" id="L27" title="All 2 branches covered.">		if (numberOfRows &gt; 0) {</span>
+<span class="fc" id="L28">			Word word = session.get(Word.class, GENERATOR.nextInt(numberOfRows.intValue()) + 1);</span>
+<span class="fc" id="L29">			session.getTransaction().commit();</span>
+<span class="fc" id="L30">			string = word.getString();</span>
+<span class="fc" id="L31">		} else {</span>
+<span class="fc" id="L32">			session.getTransaction().rollback();</span>
+		}
+
+<span class="fc" id="L35">		return string;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

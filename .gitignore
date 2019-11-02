@@ -1,4 +1,6 @@
-target/*
+target/
 
 *.class
 /target/
+/.metadata/
+/.metadata/
