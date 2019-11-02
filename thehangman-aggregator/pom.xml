@@ -10,6 +10,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar.coverage.jacoco.reportPaths>
+		../thehangman-report/site/jacoco-aggregate/
+		</sonar.coverage.jacoco.reportPaths>
 	</properties>
 
 	<modules>
