@@ -37,7 +37,7 @@ public class TheHangmanApp implements Callable<Void> {
 	private String databaseName = "HangmanDB";
 
 	@Option(names = { "mode" }, description = "game mode")
-	private String mode = "terminal";
+	private String mode = "graphical";
 
 	@Option(names = "-t")
 	private boolean isTestMode;
@@ -59,7 +59,7 @@ public class TheHangmanApp implements Callable<Void> {
 			setupGraphicsAndStartGameLoop(mode, finalWord);
 
 		} catch (Exception e) {
-			LOGGER.info("Can cause Exception" );
+			LOGGER.info("Can cause Exception");
 		}
 		return null;
 	}
@@ -83,8 +83,11 @@ public class TheHangmanApp implements Callable<Void> {
 
 	private static Configuration loadTestScript(boolean isTest, Configuration conf) {
 		if (isTest)
-			conf.setProperty("javax.persistence.sql-load-script-source", "src/test/resources/testLoad.sql");
-		return conf;
+			return conf.setProperty("javax.persistence.sql-load-script-source", "src/test/resources/testLoad.sql");
+		else {
+			return conf.setProperty("javax.persistence.sql-load-script-source",
+					TheHangmanApp.class.getClassLoader().getResource("load.sql").toString());
+		}
 	}
 
 }

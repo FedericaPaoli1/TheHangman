@@ -58,12 +58,6 @@
 				<module>../thehangman-report</module>
 			</modules>
 		</profile>
-		<profile>
-			<id>mutation-testing</id>
-			<modules>
-				<module>../thehangman-report</module>
-			</modules>
-		</profile>
 	</profiles>
 
 	<build>
