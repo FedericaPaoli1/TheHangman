@@ -34,6 +34,9 @@
 			**/TheHangmanApp.*,
 			**/exceptions/*.*
 		</sonar.coverage.exclusions>
+
+		<sonar.java.libraries>../**/*.jar</sonar.java.libraries>
+
 	</properties>
 
 	<modules>

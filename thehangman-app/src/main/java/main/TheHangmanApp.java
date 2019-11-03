@@ -52,7 +52,7 @@ public class TheHangmanApp implements Callable<Void> {
 			Configuration conf = new ConfigurationBuilder().withUsername(this.mysqlUsername)
 					.withPassword(this.mysqlPassword).withExposedPort("" + this.mysqlPort)
 					.withDatabaseName(this.databaseName).build();
-			loadTestScript(isTestMode, conf);
+			loadScript(isTestMode, conf);
 			WordMySQLRepository repository = new WordMySQLRepository(conf.buildSessionFactory());
 			String finalWord = repository.getRandomWord();
 
@@ -81,7 +81,7 @@ public class TheHangmanApp implements Callable<Void> {
 		}
 	}
 
-	private static Configuration loadTestScript(boolean isTest, Configuration conf) {
+	private static Configuration loadScript(boolean isTest, Configuration conf) {
 		if (isTest)
 			return conf.setProperty("javax.persistence.sql-load-script-source", "src/test/resources/testLoad.sql");
 		else {
